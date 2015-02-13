@@ -5,6 +5,6 @@ compiler: gcc
 before_install:
   - echo $LANG
   - echo $LC_ALL
-	sudo apt-get update && sudo apt-get install freeglut3-dev cmake
+    sudo apt-get update && sudo apt-get install freeglut3-dev cmake
 
 script: ./compile.sh
