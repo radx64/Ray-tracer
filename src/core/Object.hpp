@@ -19,6 +19,10 @@ public:
 		Sphere,
 		Box
 	};
+
+	Object() : position_(0.0,0.0,0.0)
+	{ }
+
 	void setPosition(Point& p);
 	Point getPosition();
 

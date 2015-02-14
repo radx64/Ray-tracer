@@ -21,6 +21,10 @@ public:
 
 	Scene load(std::string filename);
 	Json::Value getOrDie(Json::Value node, std::string name);
+
+	core::Point loadPosition(Json::Value& objectNode);
+
+	void loadSphere(Scene& scene, Json::Value& sphereNode);
 };
 
 }  // namespace scene

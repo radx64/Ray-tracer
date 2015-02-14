@@ -17,7 +17,6 @@ Scene Loader::load(std::string filename)
 	std::ifstream file(filename);
 	if (!file) throw std::string("Can't read " + filename);
 	file >> root;
-	//std::cout << root << std::endl;
 	Json::Value sceneNode;
 	sceneNode = getOrDie(root, "scene");
 	scene.setName(sceneNode.get("name", "Name not set").asString());
@@ -27,9 +26,11 @@ Scene Loader::load(std::string filename)
 
 	for(auto& object : objectsNode)
 	{
-		if(object == "sphere")
+		// Todo: do someting with that mess
+		if(object.get("sphere", "null") != "null")
 		{
-			//sphere creation
+			Json::Value sphere = object.get("sphere", "null");
+			loadSphere(scene, sphere);
 		}
 	}
 
@@ -48,6 +49,29 @@ Json::Value Loader::getOrDie(Json::Value node, std::string name)
 		throw std::string("Error parsing branch " + name);
 		return Json::Value();
 	}
+}
+
+
+core::Point Loader::loadPosition(Json::Value& objectNode)
+{
+	Json::Value position = getOrDie(objectNode, "position");
+	double x = position.get("x", "0.0").asDouble();
+	double y = position.get("y", "0.0").asDouble();
+	double z = position.get("z", "0.0").asDouble();
+	return core::Point(x, y, z);	
+}
+
+void Loader::loadSphere(Scene& scene, Json::Value& sphereNode)
+{
+	std::cout << "Loading sphere..." << std::endl;
+	core::Object::Ptr object = std::make_shared<core::Object>();
+	object->setType(core::Object::Type::Sphere);
+
+	core::Point pos = loadPosition(sphereNode);
+
+	object->setPosition(pos);
+
+	scene.addObject(object);
 }
 
 }  // namespace scene

@@ -15,6 +15,10 @@ public:
 	x_(x), y_(y), z_(z)
 	{ }
 
+	explicit Point():
+	x_(0.0), y_(0.0), z_(0.0)
+	{ }
+
 	double getX() const;
 	double getY() const;
 	double getZ() const;

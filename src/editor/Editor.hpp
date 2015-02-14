@@ -5,6 +5,7 @@
 #include <GL/glut.h> 
 
 #include <vector>
+#include <cmath>
 
 namespace rt
 {
@@ -32,7 +33,7 @@ public:
 	        glMatrixMode(GL_MODELVIEW);
 	        glClear(GL_COLOR_BUFFER_BIT); 
 	        glLoadIdentity(); 
-	        gluLookAt (0.0, 0.0, 0.0, 0.0, 0.0, -10.0, 0.0, 1.0, 0.0);
+	        gluLookAt (0.0, 0.0, 0.0, (5.0 - fmod(rotation/50.0, 10.0)), 0.0, -10.0, 0.0, 1.0, 0.0);
 
 	        glTranslatef(0.0,0.0,-10.0);
 	        glColor3f(0.9, 0.3, 0.2);
@@ -89,7 +90,7 @@ public:
     };
 
 private:
-	static float rotation;
+	static double rotation;
 	static std::vector<int> windowIds;
 };
 

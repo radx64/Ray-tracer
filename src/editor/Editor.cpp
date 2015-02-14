@@ -4,7 +4,7 @@ namespace rt
 {
 namespace editor
 {
-	float Editor::rotation;
+	double Editor::rotation;
 	std::vector<int> Editor::windowIds;
 }  // namespace editor
 }  // namespace rt

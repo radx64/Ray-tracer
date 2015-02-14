@@ -21,5 +21,6 @@ std::cout << lightRed << "   █" << white << "█" << lightRed << "████
 std::cout << lightRed << "   ████████" << red << "█      " << std::endl;
 std::cout << lightRed << "    █████" << red << "██      " << std::endl;
 std::cout << lightRed << "     ██" << red << "███      " << std::endl;
+std::cout << def << std::endl;
 
 };
