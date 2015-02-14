@@ -1,0 +1,19 @@
+{
+    "scene": 
+    {
+        "name": "example scene",
+        "objects": 
+        {
+            "sphere" : 
+            {
+                "position" :
+                 {
+                    "x" : 0.0,
+                    "y" : 0.0,
+                    "z" : 10.0
+                },
+                "radius" : 5.0
+            }
+        }
+    }
+}

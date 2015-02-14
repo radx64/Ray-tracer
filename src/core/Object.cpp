@@ -16,4 +16,4 @@ Point Object::getPosition()
 }
 
 }  // namespace core
-}  // namespace rt
+}  // namespace return

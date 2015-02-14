@@ -19,13 +19,17 @@ if (NOT CONFIGURED_ONCE)
 endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}
-					src)
+					src
+					libs/jsoncpp)
+
+add_definitions(-std=c++11)
 
 add_subdirectory(src)
+add_subdirectory(libs)
 
 add_executable(${projectName} main.cpp)
 
-target_link_libraries(${projectName} GL GLU glut raytracerCore)
+target_link_libraries(${projectName} GL GLU glut raytracerCore externalLibs)
 
 set(CONFIGURED_ONCE TRUE CACHE INTERNAL
     "A flag showing that CMake has configured at least once.")

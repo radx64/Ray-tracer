@@ -1,6 +1,8 @@
 #ifndef RT_CORE_OBJECT_HPP_
 #define RT_CORE_OBJECT_HPP_
 
+#include <memory>
+
 #include "Point.hpp"
 
 namespace rt
@@ -11,6 +13,7 @@ namespace core
 class Object
 {
 public:
+	typedef std::shared_ptr<Object> Ptr;
 	void setPosition(Point& p);
 	Point getPosition();
 
