@@ -7,22 +7,22 @@ namespace core
 
 void Object::setPosition(Point& p)
 {
-	position_ = p;
+    position_ = p;
 }
 
 Point Object::getPosition()
 {
-	return position_;
+    return position_;
 }
 
 void Object::setType(Object::Type type)
 {
-	type_ = type;
+    type_ = type;
 }
 
 Object::Type Object::getType()
 {
-	return type_;
+    return type_;
 }
 
 }  // namespace core

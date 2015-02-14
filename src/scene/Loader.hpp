@@ -16,15 +16,15 @@ namespace scene
 class Loader
 {
 public:
-	Loader()
-	{ }
+    Loader()
+    { }
 
-	Scene load(std::string filename);
-	Json::Value getOrDie(Json::Value node, std::string name);
+    Scene load(std::string filename);
+    Json::Value getOrDie(Json::Value node, std::string name);
 
-	core::Point loadPosition(Json::Value& objectNode);
+    core::Point loadPosition(Json::Value& objectNode);
 
-	void loadSphere(Scene& scene, Json::Value& sphereNode);
+    void loadSphere(Scene& scene, Json::Value& sphereNode);
 };
 
 }  // namespace scene

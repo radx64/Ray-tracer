@@ -12,7 +12,7 @@ void textInterface();
 
 int main(int argc, char** argv)
 {
-	std::cout << "Params given: " << argc << std::endl <<"To executable: "<< argv[0] << std::endl;
+    std::cout << "Params given: " << argc << std::endl <<"To executable: "<< argv[0] << std::endl;
     printIntro();
     if (argc > 1)
     {
