@@ -25,7 +25,7 @@ add_subdirectory(src)
 
 add_executable(${projectName} main.cpp)
 
-target_link_libraries(${projectName} raytracerCore)
+target_link_libraries(${projectName} GL GLU glut raytracerCore)
 
 set(CONFIGURED_ONCE TRUE CACHE INTERNAL
     "A flag showing that CMake has configured at least once.")
