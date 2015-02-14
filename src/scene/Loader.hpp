@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include "libs/jsoncpp/json/json.h"
+
 #include "Loader.hpp"
 #include "Scene.hpp"
 
@@ -18,6 +20,7 @@ public:
 	{ }
 
 	Scene load(std::string filename);
+	Json::Value getOrDie(Json::Value node, std::string name);
 };
 
 }  // namespace scene

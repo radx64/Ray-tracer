@@ -1,9 +1,11 @@
 #include <iostream>
 
+
+#include "Intro.hpp"
 #include "core/Point.hpp"
 #include "core/Vector.hpp"
-
 #include "editor/Editor.hpp"
+#include "scene/Loader.hpp"
 
 void guiInterface(int argc, char** argv);
 void textInterface();
@@ -11,7 +13,7 @@ void textInterface();
 int main(int argc, char** argv)
 {
 	std::cout << "Params given: " << argc << std::endl <<"To executable: "<< argv[0] << std::endl;
-
+    printIntro();
     if (argc > 1)
     {
         std::cout << "Starting GUI interface using OpenGL..." << std::endl;
@@ -27,6 +29,9 @@ int main(int argc, char** argv)
 
 void guiInterface(int argc, char** argv)
 {
+    rt::scene::Loader loader;
+    loader.load("../scene.json");
+
     rt::editor::Editor editor;
     editor.show(argc, argv);
 }

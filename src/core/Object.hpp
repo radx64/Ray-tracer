@@ -14,11 +14,20 @@ class Object
 {
 public:
 	typedef std::shared_ptr<Object> Ptr;
+	enum Type
+	{
+		Sphere,
+		Box
+	};
 	void setPosition(Point& p);
 	Point getPosition();
 
+	void setType(Type type);
+	Type getType();
+
 private:
 	Point position_;
+	Type type_;
 };
 
 }  // namespace core
