@@ -1,11 +1,13 @@
 #ifndef RT_EDITOR_OBJECT_HPP_
 #define RT_EDITOR_OBJECT_HPP_
 
+#include <vector>
+#include <cmath>
+
 #include <GL/gl.h> 
 #include <GL/glut.h> 
 
-#include <vector>
-#include <cmath>
+#include "scene/Scene.hpp"
 
 namespace rt
 {
@@ -16,7 +18,7 @@ class Editor
 public:
     Editor()
     {
-        rotation = 0.0;
+        rotation_ = 0.0;
     };
 
     static void display2(void)
@@ -33,21 +35,31 @@ public:
             glMatrixMode(GL_MODELVIEW);
             glClear(GL_COLOR_BUFFER_BIT); 
             glLoadIdentity(); 
-            gluLookAt (0.0, 0.0, 0.0, (5.0 - fmod(rotation/50.0, 10.0)), 0.0, -10.0, 0.0, 1.0, 0.0);
+            gluLookAt(0.0, 0.0, 0.0, (5.0 - fmod(rotation_/50.0, 10.0)), 0.0, -10.0, 0.0, 1.0, 0.0);
+
+            glColor3f(0.9, 0.9, 0.2);
+
+            for(auto& object : scene_.getObjects())
+            {
+                core::Point p = object->getPosition();
+
+                glTranslatef(p.getX(), p.getY(), p.getZ());
+                glutSolidSphere(2,10,10);  
+                glTranslatef(-p.getX(), -p.getY(), -p.getZ());
+            }
 
             glTranslatef(0.0,0.0,-10.0);
             glColor3f(0.9, 0.3, 0.2);
             glScalef(1.0,1.0,1.0);
 
-            glRotatef(rotation+=1.0,1.0,0.0,0.0);
+            glRotatef(rotation_+=1.0,1.0,0.0,0.0);
             // rotation about Y axis
-            glRotatef(rotation+=1.0,0.0,1.0,0.0);
+            glRotatef(rotation_+=1.0,0.0,1.0,0.0);
             // rotation about Z axis
-            glRotatef(rotation+=1.0,0.0,0.0,1.0);
+            glRotatef(rotation_+=1.0,0.0,0.0,1.0);
             glutWireSphere(2,10,10);
             glColor3f(0.3, 0.9, 0.2);
             glutWireCube(4);
-
             glFlush(); 
     };
 
@@ -65,7 +77,7 @@ public:
     {
         // setups the timer to be called again
         glutTimerFunc(50, Editor::processAnimationTimer, value);
-        for(int i=1; i<int(windowIds.size()+1);++i)
+        for(int i=1; i<int(windowIds_.size()+1);++i)
         {
             glutSetWindow(i);
             glutPostRedisplay();   
@@ -73,13 +85,14 @@ public:
         
     };
 
-    void show(int argc, char** argv)
+    void show(int argc, char** argv, scene::Scene& scene)
     {
+        scene_ = scene;
         glutInit(&argc, argv); 
         glutInitDisplayMode(GLUT_SINGLE); 
         glutInitWindowSize(500,500); 
         glutInitWindowPosition(100, 100); 
-        windowIds.push_back(glutCreateWindow ("Preview window"));
+        windowIds_.push_back(glutCreateWindow ("Preview window"));
         glutDisplayFunc(display);
         glutReshapeFunc(reshape);
         //std::cout <<  glutCreateWindow ("Render window") << std::endl;
@@ -90,8 +103,9 @@ public:
     };
 
 private:
-    static double rotation;
-    static std::vector<int> windowIds;
+    static double rotation_;
+    static std::vector<int> windowIds_;
+    static scene::Scene scene_;
 };
 
 }  // namespace editor

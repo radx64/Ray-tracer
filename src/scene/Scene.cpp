@@ -7,7 +7,7 @@ namespace scene
 
 void Scene::addObject(core::Object::Ptr object)
 {
-    Objects_.push_back(object);
+    objects_.push_back(object);
 }
 
 void Scene::setName(std::string name)
@@ -19,5 +19,9 @@ std::string Scene::getName()
     return name_;
 }
 
+std::vector<core::Object::Ptr> Scene::getObjects()
+{
+    return objects_;
+}
 }  // namespace scene
 }  // namespace rt

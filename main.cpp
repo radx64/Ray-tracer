@@ -6,6 +6,7 @@
 #include "core/Vector.hpp"
 #include "editor/Editor.hpp"
 #include "scene/Loader.hpp"
+#include "scene/Scene.hpp"
 
 void guiInterface(int argc, char** argv);
 void textInterface();
@@ -30,10 +31,12 @@ int main(int argc, char** argv)
 void guiInterface(int argc, char** argv)
 {
     rt::scene::Loader loader;
-    loader.load("../scene.json");
+    rt::scene::Scene s;
+    s = loader.load("../scene.json");
+
 
     rt::editor::Editor editor;
-    editor.show(argc, argv);
+    editor.show(argc, argv, s);
 }
 
 void textInterface()

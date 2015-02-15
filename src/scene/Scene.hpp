@@ -20,9 +20,10 @@ public:
 
     void setName(std::string name);
     std::string getName();
+    std::vector<core::Object::Ptr> getObjects();
 
 private:
-    std::vector<core::Object::Ptr> Objects_;
+    std::vector<core::Object::Ptr> objects_;
     //std::vector<core::Object::Ptr> Lights_;
     std::string name_;
 };
