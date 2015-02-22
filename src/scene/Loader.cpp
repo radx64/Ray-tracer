@@ -4,6 +4,7 @@
 
 #include "Loader.hpp"
 
+#include "shape/Sphere.hpp"
 
 namespace rt
 {
@@ -64,8 +65,7 @@ core::Point Loader::loadPosition(Json::Value& objectNode)
 void Loader::loadSphere(Scene& scene, Json::Value& sphereNode)
 {
     std::cout << "Loading sphere..." << std::endl;
-    core::Object::Ptr object = std::make_shared<core::Object>();
-    object->setType(core::Object::Type::Sphere);
+    core::Object::Ptr object = std::make_shared<shape::Sphere>();
 
     core::Point pos = loadPosition(sphereNode);
 

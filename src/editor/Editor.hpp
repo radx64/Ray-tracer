@@ -1,6 +1,8 @@
 #ifndef RT_EDITOR_OBJECT_HPP_
 #define RT_EDITOR_OBJECT_HPP_
 
+#include <iostream>
+
 #include <vector>
 #include <cmath>
 
@@ -8,6 +10,7 @@
 #include <GL/glut.h> 
 
 #include "scene/Scene.hpp"
+#include "Raytracer.hpp"
 
 namespace rt
 {
@@ -17,25 +20,77 @@ class Editor
 {
 public:
     Editor()
-    {
-        rotation_ = 0.0;
-    };
+    { };
 
-    static void display2(void)
-    { 
-            glClearColor (0.0, 1.0, 0.0, 1.0); 
-            glClear(GL_COLOR_BUFFER_BIT); 
-            glLoadIdentity(); 
-            gluLookAt (0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0); 
-            glFlush(); 
-    };
+    static void displayRendered(void)
+    {
+
+    int  x, y;           // pozycja rysowanego piksela "całkowitoliczbowa"
+    float x_fl, y_fl;    // pozycja rysowanego piksela "zmiennoprzecinkowa"
+    GLubyte pixel[1][1][3]; // składowe koloru rysowanego piksela
+    int im_size = IMG_SIDE;
+    double viewport_size = 3.0;
+    int im_size_2;       // połowa rozmiaru obrazu w pikselach
+    im_size_2 = im_size/2;    // obliczenie połowy rozmiaru obrazu w pikselach
+        
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(-viewport_size/2, viewport_size/2, -viewport_size/2, viewport_size/2, -viewport_size/2, viewport_size/2);
+    glMatrixMode(GL_MODELVIEW);
+
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    glFlush();
+
+    std::cout << "imageToDraw_: " << imageToDraw_.size()<< std::endl;
+    std::cout << "imageToDraw_: " << imageToDraw_[0].size()<< std::endl;
+
+
+        for (y = im_size_2; y > -im_size_2; y--)    
+        {
+            for (x = -im_size_2; x < im_size_2; x++)    
+            {
+            
+            x_fl = (float)x/(im_size/viewport_size);        
+            y_fl = (float)y/(im_size/viewport_size);
+
+            pixel[0][0][0] = imageToDraw_[x+im_size_2][y+im_size_2];
+            pixel[0][0][1] = imageToDraw_[x+im_size_2][y+im_size_2];
+            pixel[0][0][2] = imageToDraw_[x+im_size_2][y+im_size_2];
+
+            //pixel[0][0][0] = 155;
+            //pixel[0][0][1] = 155;
+            //pixel[0][0][2] = 155;
+
+            //glRasterPos3f(x_fl, y_fl, 0);
+            //glDrawPixels(1, 1, GL_RGB, GL_UNSIGNED_BYTE, pixel);
+
+            glPushMatrix();
+
+            glColor3f(imageToDraw_[x+im_size_2][y+im_size_2]/255.0,
+                imageToDraw_[x+im_size_2][y+im_size_2]/255.0,
+                imageToDraw_[x+im_size_2][y+im_size_2]/255.0);
+
+            glTranslatef(x_fl,y_fl,0.0f);   
+            glBegin(GL_QUADS);                      // Draw A Quad
+                glVertex3f(0.0f, 0.0f, 0.0f);              // Top Left
+                glVertex3f(1.0f, 0.0f, 0.0f);              // Top Right
+                glVertex3f(1.0f, 1.0f, 0.0f);              // Bottom Right
+                glVertex3f(0.0f, 1.0f, 0.0f);              // Bottom Left
+            glEnd();                            // Done Drawing The Quad
+
+            glPopMatrix();
+            }
+        }
+        glFlush();
+    }
 
     static void display(void)
     { 
             glMatrixMode(GL_MODELVIEW);
             glClear(GL_COLOR_BUFFER_BIT); 
             glLoadIdentity(); 
-            gluLookAt(0.0, 0.0, 0.0, (5.0 - fmod(rotation_/50.0, 10.0)), 0.0, -10.0, 0.0, 1.0, 0.0);
+            gluLookAt(0.0, 0.0, 0.0, 0.0, 0.0, -10.0, 0.0, 1.0, 0.0);
 
             glColor3f(0.9, 0.9, 0.2);
 
@@ -44,7 +99,7 @@ public:
                 core::Point p = object->getPosition();
 
                 glTranslatef(p.getX(), p.getY(), p.getZ());
-                glutSolidSphere(2,10,10);  
+                glutSolidSphere(2,25,25);  
                 glTranslatef(-p.getX(), -p.getY(), -p.getZ());
             }
 
@@ -52,14 +107,9 @@ public:
             glColor3f(0.9, 0.3, 0.2);
             glScalef(1.0,1.0,1.0);
 
-            glRotatef(rotation_+=1.0,1.0,0.0,0.0);
-            // rotation about Y axis
-            glRotatef(rotation_+=1.0,0.0,1.0,0.0);
-            // rotation about Z axis
-            glRotatef(rotation_+=1.0,0.0,0.0,1.0);
-            glutWireSphere(2,10,10);
+            //glutWireSphere(2,10,10);
             glColor3f(0.3, 0.9, 0.2);
-            glutWireCube(4);
+            //glutWireCube(4);
             glFlush(); 
     };
 
@@ -73,21 +123,10 @@ public:
         glViewport(0,0,x,y);  //Use the whole window for rendering
     };
 
-    static void processAnimationTimer(int value)
-    {
-        // setups the timer to be called again
-        glutTimerFunc(50, Editor::processAnimationTimer, value);
-        for(int i=1; i<int(windowIds_.size()+1);++i)
-        {
-            glutSetWindow(i);
-            glutPostRedisplay();   
-        }
-        
-    };
-
-    void show(int argc, char** argv, scene::Scene& scene)
+    void show(int argc, char** argv, const scene::Scene& scene, const Raytracer::ImgType& img)
     {
         scene_ = scene;
+        imageToDraw_ = img;
         glutInit(&argc, argv); 
         glutInitDisplayMode(GLUT_SINGLE); 
         glutInitWindowSize(500,500); 
@@ -95,10 +134,9 @@ public:
         windowIds_.push_back(glutCreateWindow ("Preview window"));
         glutDisplayFunc(display);
         glutReshapeFunc(reshape);
-        //std::cout <<  glutCreateWindow ("Render window") << std::endl;
-        //glutDisplayFunc (display2);
-        //glutReshapeFunc(reshape);
-        processAnimationTimer(100);
+        windowIds_.push_back(glutCreateWindow ("Render window"));
+        glutDisplayFunc (displayRendered);
+        glutReshapeFunc(reshape);
         glutMainLoop();
     };
 
@@ -106,6 +144,7 @@ private:
     static double rotation_;
     static std::vector<int> windowIds_;
     static scene::Scene scene_;
+    static Raytracer::ImgType imageToDraw_;
 };
 
 }  // namespace editor

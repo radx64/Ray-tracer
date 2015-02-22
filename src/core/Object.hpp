@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "Point.hpp"
+#include "Ray.hpp"
 
 namespace rt
 {
@@ -14,11 +15,6 @@ class Object
 {
 public:
     typedef std::shared_ptr<Object> Ptr;
-    enum Type
-    {
-        Sphere,
-        Box
-    };
 
     Object() : position_(0.0,0.0,0.0)
     { }
@@ -26,12 +22,12 @@ public:
     void setPosition(Point& p);
     Point getPosition();
 
-    void setType(Type type);
-    Type getType();
+    virtual Vector getNormalAt(Point& p) = 0;
+    virtual bool Hit(Ray r, double& dist) = 0;
+
 
 private:
     Point position_;
-    Type type_;
 };
 
 }  // namespace core

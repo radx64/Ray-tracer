@@ -5,7 +5,6 @@
 
 #include "libs/jsoncpp/json/json.h"
 
-#include "Loader.hpp"
 #include "Scene.hpp"
 
 namespace rt

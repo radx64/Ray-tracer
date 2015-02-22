@@ -1,8 +1,5 @@
 file(GLOB_RECURSE SRC
-    "*.h"
-    "*.hpp"
-    "*.c"
-    "*.cpp"
+    "./*.cpp"
 )
 
 add_library(raytracerCore ${SRC})
