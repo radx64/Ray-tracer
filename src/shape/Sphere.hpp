@@ -14,11 +14,13 @@ namespace shape
 class Sphere : public core::Object
 {
 public:
+    typedef std::shared_ptr<Sphere> Ptr;
+    
     Sphere()
     { }
 
     virtual core::Vector getNormalAt(core::Point& p);
-    virtual bool Hit(core::Ray r, double& dist);
+    virtual bool hit(core::Ray r, double& dist);
 
     void setRadius(double radius);
     double getRadius();

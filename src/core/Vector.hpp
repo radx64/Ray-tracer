@@ -15,10 +15,13 @@ public:
     { };
     Vector() : Point(0.0, 0.0, 0.0)
     { };
-    Vector(const Vector& v) : Point(v.getX(), v.getY(), v.getZ())
+    Vector(const Point& p) : Point(p)
+    { };
+    Vector(const Vector& v) : Point(x_,y_,z_)
     { };
 
     Vector crossProduct(const Vector& v);
+    double dotProduct(const Vector& v);
     bool isZero();
     void normalize();
 

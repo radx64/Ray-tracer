@@ -2,6 +2,8 @@
 
 #include <cmath>
 
+#include <iostream>
+
 namespace rt
 {
 namespace shape
@@ -24,31 +26,39 @@ core::Vector Sphere::getNormalAt(core::Point& p)
     return normal;
 }
 
-bool Sphere::Hit(core::Ray r, double& dist)
+bool Sphere::hit(core::Ray r, double& dist)
 {
-    core::Point p = getPosition() - r.getOrgin();
-    core::Vector distance;
-    distance = p; 
-    double B = r.getDirection() * distance;
-    double D = B*B - distance * distance + getRadius() * getRadius(); 
-    if (D < 0.0f) return false;
+    const core::Vector p =  r.getOrgin() - getPosition();
+    core::Vector distance;  
+    distance = p;
+    double B = r.getDirection().dotProduct(distance);
+    double D = B*B - distance.dotProduct(distance) + (getRadius() * getRadius()); 
+    if (D < 0.0) return false;
     double t0 = B - sqrtf(D); 
     double t1 = B + sqrtf(D);
+
+    //std::cout << "distance " << distance << std::endl;
+    //std::cout << "B  " << B << std::endl;
+    //std::cout << "D  " << D << std::endl;
+    // std::cout << "t0 " << t0 << std::endl;
+    // std::cout << "t1 " << t1 << std::endl;
+
     bool retvalue = false;  
-    if ((t0 >= 0.5f) && (t0 <= dist))
+    if ((t0 > 0.5) && (t0 <= dist))
     {
         dist = t0;
+        // std::cout << "Hit to sphere : t0 "<< t0 << std::endl;
         retvalue = true;
     } 
-    if ((t1 >= 0.5f) && (t1 <= dist))                   
+    if ((t1 > 0.5) && (t1 <= dist))                   
     {
-        dist = t1; 
+        dist = t1;
+        // std::cout << "Hit to sphere : t1 "<< t1 << std::endl;
         retvalue = true; 
     }
 
     return retvalue;
 }
-
 
 }  // namespace shape
 }  // namespace rt

@@ -2,6 +2,8 @@
 
 #include <cmath>
 
+#include <iostream>
+
 namespace rt
 {
 namespace core
@@ -13,6 +15,11 @@ Vector Vector::crossProduct(const Vector& v)
     double y = z_ * v.getX() - v.getZ() * x_; 
     double z = x_ * v.getY() - v.getX() * y_;
     return Vector(x, y, z);
+}
+
+double Vector::dotProduct(const Vector& v)
+{
+    return getX()*v.getX() + getY()*v.getY() + getZ()*v.getZ();
 }
 
 void Vector::normalize()
@@ -33,14 +40,14 @@ bool Vector::isZero()
     return false;
 }
 
-Vector Vector::operator+ (const Point& p)
+Vector Vector::operator+(const Point& p)
 {
     return Vector(x_ +p.getX(), y_ + p.getY(), z_ + p.getZ());
 }
 
 Vector Vector::operator=(const Point& p)
 {
-    return Vector(p.getX(), p.getY(), p.getZ());
+    return Vector(p.getX(),p.getY(),p.getZ());;
 }
 
 }  // namespace core

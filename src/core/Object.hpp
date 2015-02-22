@@ -23,7 +23,7 @@ public:
     Point getPosition();
 
     virtual Vector getNormalAt(Point& p) = 0;
-    virtual bool Hit(Ray r, double& dist) = 0;
+    virtual bool hit(Ray r, double& dist) = 0;
 
 
 private:

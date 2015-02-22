@@ -7,6 +7,9 @@
 
 namespace rt
 {
+
+// whole dynamic image scaling will be implemented. This one below is only for testing purposes.
+
 #define IMG_SIDE 128
 
 class Raytracer
@@ -27,6 +30,7 @@ public:
 	ImgType getImage();
 
 private:
+	double trace(core::Ray& ray, int recursiveStep);
 	ImgType buffer_;
 	scene::Scene scene_;
 };

@@ -67,9 +67,9 @@ public:
 
             glPushMatrix();
 
-            glColor3f(imageToDraw_[x+im_size_2][y+im_size_2]/255.0,
-                imageToDraw_[x+im_size_2][y+im_size_2]/255.0,
-                imageToDraw_[x+im_size_2][y+im_size_2]/255.0);
+            glColor3f(1.0-imageToDraw_[x+im_size_2][y+im_size_2]/255.0,
+                1.0-imageToDraw_[x+im_size_2][y+im_size_2]/255.0,
+                1.0-imageToDraw_[x+im_size_2][y+im_size_2]/255.0);
 
             glTranslatef(x_fl,y_fl,0.0f);   
             glBegin(GL_QUADS);                      // Draw A Quad
@@ -134,6 +134,7 @@ public:
         windowIds_.push_back(glutCreateWindow ("Preview window"));
         glutDisplayFunc(display);
         glutReshapeFunc(reshape);
+        glutInitWindowSize(128*8,128*8); 
         windowIds_.push_back(glutCreateWindow ("Render window"));
         glutDisplayFunc (displayRendered);
         glutReshapeFunc(reshape);
