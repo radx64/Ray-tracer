@@ -34,8 +34,7 @@ void guiInterface(int argc, char** argv)
     try
     {
         rt::scene::Loader loader;
-        rt::scene::Scene s;
-        s = loader.load("../scene.json");
+        rt::scene::Scene s = loader.load("../scene.json");
         rt::Raytracer raytracer;
         raytracer.load(s);
         raytracer.run();

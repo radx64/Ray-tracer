@@ -10,7 +10,7 @@ namespace rt
 
 // whole dynamic image scaling will be implemented. This one below is only for testing purposes.
 
-#define IMG_SIDE 128
+#define IMG_SIDE 256
 
 class Raytracer
 {
