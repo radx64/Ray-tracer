@@ -10,6 +10,7 @@ addons:
       libstdc++-4.8-dev
       freeglut3-dev
       cmake
+      g++
 
 before_install:
   - echo $LANG
