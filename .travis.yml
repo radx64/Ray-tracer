@@ -5,12 +5,12 @@ compiler: gcc
 addons:
   apt:
     sources:
-      ppa:ubuntu-toolchain-r/test
+      - ubuntu-toolchain-r/test
     packages:
-      libstdc++-4.8-dev
-      freeglut3-dev
-      cmake
-      g++
+      - libstdc++-4.8-dev
+      - freeglut3-dev
+      - cmake
+      - g++
 
 before_install:
   - echo $LANG
