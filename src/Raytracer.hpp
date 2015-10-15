@@ -10,12 +10,12 @@ namespace rt
 
 // whole dynamic image scaling will be implemented. This one below is only for testing purposes.
 
-#define IMG_SIDE 256
+#define IMG_SIDE 512
 
 class Raytracer
 {
 public:
-	typedef std::vector<std::vector<double>> ImgType;
+	using ImgType = std::vector<std::vector<double>>;
 	Raytracer()
 	{
 		buffer_.resize(IMG_SIDE);

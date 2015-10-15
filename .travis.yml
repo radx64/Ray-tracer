@@ -9,8 +9,8 @@ addons:
     packages:
       - g++-4.8
       - gcc-4.8
-      - freeglut3-dev
       - cmake
+      - libpng++-dev
 
 before_install:
   - echo $LANG

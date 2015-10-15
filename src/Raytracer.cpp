@@ -19,7 +19,7 @@ void Raytracer::load(scene::Scene& s)
 
 void Raytracer::run()
 {
-	for(int height=0; height < IMG_SIDE; height++)
+	for(int height=-IMG_SIDE/2; height < IMG_SIDE/2; height++)
 	{
 		for(int width =- IMG_SIDE/2; width<IMG_SIDE/2; width++)
 		{
@@ -29,14 +29,14 @@ void Raytracer::run()
 	    	core::Ray viewRay(orgin, direction);
 
 	    	double distance = trace(viewRay, 1);
-	    	buffer_[width+IMG_SIDE/2][height] = distance;
+	    	buffer_[width+IMG_SIDE/2][height+IMG_SIDE/2] = distance;
 		}
 	}
 }
 
 double Raytracer::trace(core::Ray& ray, int recursiveStep)
 {
-	double distance = 1000000.0;
+	double distance = 100000000.0;
 
 	auto objects = scene_.getObjects();
 

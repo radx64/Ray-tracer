@@ -66,13 +66,12 @@ void Loader::loadSphere(Scene& scene, Json::Value& sphereNode)
 {
     std::cout << "Loading sphere..." << std::endl;
     
-
     shape::Sphere::Ptr object = std::make_shared<shape::Sphere>();
 
     core::Point pos = loadPosition(sphereNode);
 
     object->setPosition(pos);
-    object->setRadius(15.0);
+    object->setRadius(0.00005);
 
     scene.addObject(object);
 }

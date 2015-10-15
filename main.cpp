@@ -1,9 +1,12 @@
 #include <iostream>
+#include <algorithm>
+#include <stdint.h>
+#include <png++/png.hpp>
 
 #include "Intro.hpp"
+#include "Raytracer.hpp"
 #include "core/Point.hpp"
 #include "core/Vector.hpp"
-#include "editor/Editor.hpp"
 #include "scene/Loader.hpp"
 #include "scene/Scene.hpp"
 #include "shape/Sphere.hpp"
@@ -41,8 +44,23 @@ void guiInterface(int argc, char** argv)
         rt::Raytracer::ImgType image;
         image = raytracer.getImage();
 
-        rt::editor::Editor editor;
-        editor.show(argc, argv, s, image);
+        png::image< png::rgb_pixel > pngImage(512, 512);
+        for (size_t y = 0; y < pngImage.get_height(); ++y)
+        {
+            for (size_t x = 0; x < pngImage.get_width(); ++x)
+            {
+                double d = image[x][y] / 1000;
+                char depth = std::min(char(d), char(255));
+                if ((x == 300) && (y == 250))
+                {
+                    std::cout << "Probing:" << char(depth) << std::endl;
+                }
+                pngImage[y][x] = png::rgb_pixel(depth, depth, depth);
+            }
+        }
+        
+        pngImage.write("../render.png");
+
     }
     catch(std::string str)
     {
