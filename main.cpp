@@ -55,19 +55,19 @@ void guiInterface(int argc, char** argv)
                     pngImage[y][x] = png::rgb_pixel(100, 100, 100); 
                 }
 
-                else if(image[x][y] > 300)
+                else if(image[x][y] > 20)
                 {
                     pngImage[y][x] = png::rgb_pixel(255, 0, 0); 
                 }
-                else if (image[x][y] > 200)
+                else if (image[x][y] > 15)
                 {
                     pngImage[y][x] = png::rgb_pixel(0, 255, 0); 
                 }
-                else if (image[x][y] > 100)
+                else if (image[x][y] > 10)
                 {
                     pngImage[y][x] = png::rgb_pixel(0, 0, 255); 
                 }
-                else if (image[x][y] > 50)
+                else if (image[x][y] > 5)
                 {
                     pngImage[y][x] = png::rgb_pixel(0, 255, 255); 
                 }
