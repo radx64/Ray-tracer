@@ -71,7 +71,7 @@ void Loader::loadSphere(Scene& scene, Json::Value& sphereNode)
     core::Point pos = loadPosition(sphereNode);
 
     object->setPosition(pos);
-    object->setRadius(0.00005);
+    object->setRadius(5000.0f);
 
     scene.addObject(object);
 }

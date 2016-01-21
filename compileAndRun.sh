@@ -2,5 +2,4 @@
 mkdir build
 cd build
 cmake -G "Unix Makefiles" ..
-make
-./Raytracer test
+make && ./Raytracer test

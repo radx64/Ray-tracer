@@ -23,6 +23,9 @@ public:
 		{
 			buffer_[i].resize(IMG_SIDE);
 		}
+
+		hitCounter_ = 0;
+		noHitCounter_ = 0;
 	}
 
 	void load(scene::Scene& s);
@@ -33,6 +36,9 @@ private:
 	double trace(core::Ray& ray, int recursiveStep);
 	ImgType buffer_;
 	scene::Scene scene_;
+
+	int hitCounter_;
+	int noHitCounter_;
 };
 
 }  // namespace rt

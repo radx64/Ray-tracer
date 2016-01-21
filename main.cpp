@@ -44,18 +44,18 @@ void guiInterface(int argc, char** argv)
         rt::Raytracer::ImgType image;
         image = raytracer.getImage();
 
-        png::image< png::rgb_pixel > pngImage(512, 512);
+        png::image<png::rgb_pixel> pngImage(512, 512);
         for (size_t y = 0; y < pngImage.get_height(); ++y)
         {
             for (size_t x = 0; x < pngImage.get_width(); ++x)
             {
-                double d = image[x][y] / 1000;
+                double d = image[x][y] / 2000;
                 char depth = std::min(char(d), char(255));
-                if ((x == 300) && (y == 250))
+                if ((x == 10) && (y == 10))
                 {
-                    std::cout << "Probing:" << char(depth) << std::endl;
+                    std::cout << "Probing:" << int(depth) << std::endl;
                 }
-                pngImage[y][x] = png::rgb_pixel(depth, depth, depth);
+                pngImage[y][x] = png::rgb_pixel(-depth, -depth, -depth);
             }
         }
         
