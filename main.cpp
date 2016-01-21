@@ -73,13 +73,13 @@ void guiInterface(int argc, char** argv)
                 }
                 else
                 {
-                    double d = image[x][y]*2.0;
+                    double d = image[x][y] * 79;
                     char depth = std::min(char(d), char(255));
-                    pngImage[y][x] = png::rgb_pixel(-depth, -depth, -depth);
+                    pngImage[y][x] = png::rgb_pixel(depth, depth, depth);
                 }
                 if (image[x][y] < 0)
                 {
-                    pngImage[y][x] = png::rgb_pixel(100, 50, 0); 
+                    pngImage[y][x] = png::rgb_pixel(100, 100, 0); 
                 }
 
                 if ((x == 256-80) && (y == 256))
