@@ -19,7 +19,7 @@ Vector Vector::crossProduct(const Vector& v)
 
 double Vector::dotProduct(const Vector& v)
 {
-    return getX()*v.getX() + getY()*v.getY() + getZ()*v.getZ();
+    return (getX()*v.getX()) + (getY()*v.getY()) + (getZ()*v.getZ());
 }
 
 void Vector::normalize()

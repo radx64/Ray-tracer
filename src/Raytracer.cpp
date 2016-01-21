@@ -38,12 +38,13 @@ void Raytracer::run()
 
 double Raytracer::trace(core::Ray& ray, int recursiveStep)
 {
-	double distance = 100000000.0;
+	double distance = 1000000.0f;
 
 	auto objects = scene_.getObjects();
 
 	for(auto& object : objects)
 	{
+
 		if(object->hit(ray, distance))
 		{
 			hitCounter_++;
@@ -55,6 +56,12 @@ double Raytracer::trace(core::Ray& ray, int recursiveStep)
 		//std::cout << ray.getOrgin() << std::endl;
 		//std::cout << distance << std::endl;
 	};
+
+	if (distance < 1) 
+	{
+		distance = 1000000.0f;
+	}
+
 	return distance;
 }
 

@@ -49,13 +49,43 @@ void guiInterface(int argc, char** argv)
         {
             for (size_t x = 0; x < pngImage.get_width(); ++x)
             {
-                double d = image[x][y] / 2000;
-                char depth = std::min(char(d), char(255));
-                if ((x == 10) && (y == 10))
+                
+                if(image[x][y] > 10000)
                 {
-                    std::cout << "Probing:" << int(depth) << std::endl;
+                    pngImage[y][x] = png::rgb_pixel(100, 100, 100); 
                 }
-                pngImage[y][x] = png::rgb_pixel(-depth, -depth, -depth);
+
+                else if(image[x][y] > 300)
+                {
+                    pngImage[y][x] = png::rgb_pixel(255, 0, 0); 
+                }
+                else if (image[x][y] > 200)
+                {
+                    pngImage[y][x] = png::rgb_pixel(0, 255, 0); 
+                }
+                else if (image[x][y] > 100)
+                {
+                    pngImage[y][x] = png::rgb_pixel(0, 0, 255); 
+                }
+                else if (image[x][y] > 50)
+                {
+                    pngImage[y][x] = png::rgb_pixel(0, 255, 255); 
+                }
+                else
+                {
+                    double d = image[x][y]*2.0;
+                    char depth = std::min(char(d), char(255));
+                    pngImage[y][x] = png::rgb_pixel(-depth, -depth, -depth);
+                }
+                if (image[x][y] < 0)
+                {
+                    pngImage[y][x] = png::rgb_pixel(100, 50, 0); 
+                }
+
+                if ((x == 256-80) && (y == 256))
+                {
+                    std::cout << "Probing:" << (unsigned int)(image[x][y]) << std::endl;
+                }
             }
         }
         
