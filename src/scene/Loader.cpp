@@ -22,6 +22,9 @@ Scene Loader::load(std::string filename)
     sceneNode = getOrDie(root, "scene");
     scene.setName(sceneNode.get("name", "Name not set").asString());
 
+    std::cout << "Scene name: "<< scene.getName() << std::endl;
+
+
     Json::Value objectsNode;
     objectsNode = getOrDie(sceneNode, "objects");
 
@@ -70,8 +73,10 @@ void Loader::loadSphere(Scene& scene, Json::Value& sphereNode)
 
     core::Point pos = loadPosition(sphereNode);
 
+    double radius = getOrDie(sphereNode, "radius").asDouble();
+
     object->setPosition(pos);
-    object->setRadius(180.0f);
+    object->setRadius(radius);
 
     scene.addObject(object);
 }

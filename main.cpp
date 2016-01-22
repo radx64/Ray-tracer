@@ -21,7 +21,7 @@ int main(int argc, char** argv)
     printIntro();
     if (argc > 1)
     {
-        std::cout << "Starting GUI interface using OpenGL..." << std::endl;
+        std::cout << "Starting graphical interface..." << std::endl;
         guiInterface(argc, argv);
     }
     else
@@ -33,6 +33,11 @@ int main(int argc, char** argv)
 }
 
 void guiInterface(int argc, char** argv)
+{
+    std::cout << "NOT IMPLEMENTED YET!. USE TEXT INTERFACE." << std::endl;
+}
+
+void textInterface()
 {
     try
     {
@@ -96,15 +101,4 @@ void guiInterface(int argc, char** argv)
     {
         std::cout << "Exception was thrown: " << str << std::endl;
     }
-}
-
-void textInterface()
-{
-    rt::core::Point p(1.0, 2.0, 3.0);
-    std::cout << p << std::endl;
-    rt::core::Vector v(1.0, 2.0, 3.0);
-    std::cout << v << std::endl;
-    rt::shape::Sphere s();
-    rt::core::Vector z = v + p;
-    std::cout << z << std::endl;
 }
