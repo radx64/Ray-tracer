@@ -24,7 +24,7 @@ int main(int argc, char** argv)
     logger.inf() << "Params given: " << argc <<" to executable: "<< argv[0];
     if (argc > 1)
     {
-        logger.inf() << "Starting GUI interface using OpenGL...";
+        logger.inf() << "Starting graphical interface using OpenGL...";
         guiInterface(argc, argv);
     }
     else
@@ -36,6 +36,11 @@ int main(int argc, char** argv)
 }
 
 void guiInterface(int argc, char** argv)
+{
+    std::cout << "NOT IMPLEMENTED YET!. USE TEXT INTERFACE." << std::endl;
+}
+
+void textInterface()
 {
     try
     {
@@ -102,15 +107,4 @@ void guiInterface(int argc, char** argv)
     {
         std::cout << "Exception was thrown: " << str << std::endl;
     }
-}
-
-void textInterface()
-{
-    rt::core::Point p(1.0, 2.0, 3.0);
-    std::cout << p << std::endl;
-    rt::core::Vector v(1.0, 2.0, 3.0);
-    std::cout << v << std::endl;
-    rt::shape::Sphere s();
-    rt::core::Vector z = v + p;
-    std::cout << z << std::endl;
 }
