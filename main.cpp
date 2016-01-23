@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <stdint.h>
 #include <png++/png.hpp>
+#include <libs/Logger.hpp>
 
 #include "Intro.hpp"
 #include "Raytracer.hpp"
@@ -15,18 +16,20 @@
 void guiInterface(int argc, char** argv);
 void textInterface();
 
+Logger logger("Main");
+
 int main(int argc, char** argv)
 {
-    std::cout << "Params given: " << argc << std::endl <<"To executable: "<< argv[0] << std::endl;
     printIntro();
+    logger.inf() << "Params given: " << argc <<" to executable: "<< argv[0];
     if (argc > 1)
     {
-        std::cout << "Starting GUI interface using OpenGL..." << std::endl;
+        logger.inf() << "Starting GUI interface using OpenGL...";
         guiInterface(argc, argv);
     }
     else
     {
-        std::cout << "Starting text interface..." << std::endl;
+        logger.inf() << "Starting text interface...";
         textInterface();
     }
     return 0;
@@ -38,10 +41,13 @@ void guiInterface(int argc, char** argv)
     {
         rt::scene::Loader loader;
         rt::scene::Scene s = loader.load("../scene.json");
+        logger.inf() << "Scene loaded";
         rt::Raytracer raytracer;
+        logger.inf() << "Raytracer created";
         raytracer.load(s);
         raytracer.run();
-        rt::Raytracer::ImgType image;
+        logger.inf() << "Raytracer finished";       
+        rt::Raytracer::Image image;
         image = raytracer.getImage();
 
         png::image<png::rgb_pixel> pngImage(512, 512);
@@ -50,41 +56,41 @@ void guiInterface(int argc, char** argv)
             for (size_t x = 0; x < pngImage.get_width(); ++x)
             {
                 
-                if(image[x][y] > 10000)
+                if(image[x][y].red > 10000)
                 {
-                    pngImage[y][x] = png::rgb_pixel(100, 100, 100); 
+                    pngImage[pngImage.get_height()-y-1][x] = png::rgb_pixel(100, 100, 100); 
                 }
 
-                else if(image[x][y] > 20)
+                else if(image[x][y].red > 20)
                 {
-                    pngImage[y][x] = png::rgb_pixel(255, 0, 0); 
+                    pngImage[pngImage.get_height()-y-1][x] = png::rgb_pixel(255, 0, 0); 
                 }
-                else if (image[x][y] > 15)
+                else if (image[x][y].red > 15)
                 {
-                    pngImage[y][x] = png::rgb_pixel(0, 255, 0); 
+                    pngImage[pngImage.get_height()-y-1][x] = png::rgb_pixel(0, 255, 0); 
                 }
-                else if (image[x][y] > 10)
+                else if (image[x][y].red > 10)
                 {
-                    pngImage[y][x] = png::rgb_pixel(0, 0, 255); 
+                    pngImage[pngImage.get_height()-y-1][x] = png::rgb_pixel(0, 0, 255); 
                 }
-                else if (image[x][y] > 5)
+                else if (image[x][y].red > 5)
                 {
-                    pngImage[y][x] = png::rgb_pixel(0, 255, 255); 
+                    pngImage[pngImage.get_height()-y-1][x] = png::rgb_pixel(0, 255, 255); 
                 }
                 else
                 {
-                    double d = image[x][y] * 79;
+                    double d = image[x][y].red * 79;
                     char depth = std::min(char(d), char(255));
-                    pngImage[y][x] = png::rgb_pixel(depth, depth, depth);
+                    pngImage[pngImage.get_height()-y-1][x] = png::rgb_pixel(depth, depth, depth);
                 }
-                if (image[x][y] < 0)
+                if (image[x][y].red < 0)
                 {
-                    pngImage[y][x] = png::rgb_pixel(100, 100, 0); 
+                    pngImage[pngImage.get_height()-y-1][x] = png::rgb_pixel(100, 100, 0); 
                 }
 
                 if ((x == 256-80) && (y == 256))
                 {
-                    std::cout << "Probing:" << (unsigned int)(image[x][y]) << std::endl;
+                    logger.dbg() << "Probing:" << (unsigned int)(image[x][y]).red;
                 }
             }
         }

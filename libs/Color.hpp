@@ -1,3 +1,6 @@
+#ifndef TERMINAL_COLOR_HPP_
+#define TERMINAL_COLOR_HPP_
+
 #include <ostream>
 namespace terminal 
 {
@@ -49,7 +52,18 @@ namespace terminal
         {
             return os << "\033[" << mod.code << "m";
         }
+
+        std::string get()
+        {
+            std::string result = "\033[";
+            result+= std::to_string(code);
+            result+= "m";
+            return result;
+        }
+
     private:
         Code code;
     };
 }
+
+#endif  // TERMINAL_COLOR_HPP_

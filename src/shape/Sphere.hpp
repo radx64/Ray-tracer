@@ -3,6 +3,8 @@
 
 #include <memory>
 
+#include <libs/Logger.hpp>
+
 #include "core/Object.hpp"
 #include "core/Vector.hpp"
 
@@ -16,7 +18,7 @@ class Sphere : public core::Object
 public:
     typedef std::shared_ptr<Sphere> Ptr;
     
-    Sphere()
+    Sphere() : logger_("Sphere")
     { }
 
     virtual core::Vector getNormalAt(core::Point& p);
@@ -27,6 +29,7 @@ public:
 
 private:
     double radius_;
+    Logger logger_;
 };
 
 }  // namespace shape

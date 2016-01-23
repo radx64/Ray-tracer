@@ -64,7 +64,7 @@ core::Point Loader::loadPosition(Json::Value& objectNode)
 
 void Loader::loadSphere(Scene& scene, Json::Value& sphereNode)
 {
-    std::cout << "Loading sphere..." << std::endl;
+    logger_.dbg()<< "Loading sphere...";
     
     shape::Sphere::Ptr object = std::make_shared<shape::Sphere>();
 

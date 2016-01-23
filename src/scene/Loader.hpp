@@ -4,6 +4,7 @@
 #include <string>
 
 #include "libs/jsoncpp/json/json.h"
+#include "libs/Logger.hpp"
 
 #include "Scene.hpp"
 
@@ -15,7 +16,7 @@ namespace scene
 class Loader
 {
 public:
-    Loader()
+    Loader() : logger_("Loader")
     { }
 
     Scene load(std::string filename);
@@ -24,6 +25,8 @@ public:
     core::Point loadPosition(Json::Value& objectNode);
 
     void loadSphere(Scene& scene, Json::Value& sphereNode);
+private:
+    Logger logger_;
 };
 
 }  // namespace scene

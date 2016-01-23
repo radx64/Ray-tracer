@@ -12,7 +12,7 @@ namespace shape
 void Sphere::setRadius(double radius)
 {
     radius_ = radius;
-    std::cout << "Radius set to " << radius << std::endl;
+    logger_.inf() << "Radius set to " << radius;
 }
 double Sphere::getRadius()
 {
@@ -26,35 +26,6 @@ core::Vector Sphere::getNormalAt(core::Point& p)
     normal.normalize();
     return normal;
 }
-
-// bool Sphere::hit(core::Ray r, double& dist)
-// {
-//     const core::Vector p = r.getOrgin() - getPosition();
-//     core::Vector distance;  
-//     distance = p;
-//     double B = distance.dotProduct(r.getDirection());
-//     double D = B*B - distance.dotProduct(distance) + (getRadius() * getRadius()); 
-//     if (D < 0.0f) return false;
-//     double t0 = B - sqrtf(D); 
-//     double t1 = B + sqrtf(D); 
-
-//     if(t0 > t1) std::swap(t0, t1);
-
-//     if(t0 < 0.0f)
-//     {
-//         t0 = t1;
-//         if (t0 < 1.0f ) return false;
-//     }
-
-//     if(t0 < dist)
-//     {
-//         dist = t0;
-//     }
-
-//     //dist = t0;
-//     return true;
-
-// }
 
 bool Sphere::hit(core::Ray r, double& dist)
 {

@@ -1,9 +1,12 @@
 #ifndef RT_RAYTRACER
 #define RT_RAYTRACER
 
-#include "scene/Scene.hpp"
-
 #include <vector>
+
+#include "scene/Scene.hpp"
+#include "Pixel.hpp"
+
+#include <libs/Logger.hpp>
 
 namespace rt
 {
@@ -15,8 +18,8 @@ namespace rt
 class Raytracer
 {
 public:
-	using ImgType = std::vector<std::vector<double>>;
-	Raytracer()
+	using Image = std::vector<std::vector<Color>>;
+	Raytracer() : logger_("Raytracer")
 	{
 		buffer_.resize(IMG_SIDE);
 		for(int i=0; i<IMG_SIDE; ++i)
@@ -30,15 +33,17 @@ public:
 
 	void load(scene::Scene& s);
 	void run();
-	ImgType getImage();
+	Image getImage();
 
 private:
-	double trace(core::Ray& ray, int recursiveStep);
-	ImgType buffer_;
+	Color trace(core::Ray& ray, int recursiveStep);
+	Image buffer_;
 	scene::Scene scene_;
 
 	int hitCounter_;
 	int noHitCounter_;
+
+	Logger logger_;
 };
 
 }  // namespace rt
