@@ -22,7 +22,7 @@ Scene Loader::load(std::string filename)
     sceneNode = getOrDie(root, "scene");
     scene.setName(sceneNode.get("name", "Name not set").asString());
 
-    std::cout << "Scene name: "<< scene.getName() << std::endl;
+    logger_.inf() << "Scene name: "<< scene.getName();
 
 
     Json::Value objectsNode;
@@ -30,11 +30,19 @@ Scene Loader::load(std::string filename)
 
     for(auto& object : objectsNode)
     {
+        logger_.dbg() << "Object: "<< object.get("type","unknown").asString();
+
+        auto objectType = object.get("type", "null").asString();
+
         // Todo: do someting with that mess
-        if(object.get("sphere", "null") != "null")
+        if (objectType== "sphere")
         {
-            Json::Value sphere = object.get("sphere", "null");
+            Json::Value sphere = object.get("config", "null");
             loadSphere(scene, sphere);
+        }
+        else
+        {
+            throw std::string("Unknown object type: ") + objectType;
         }
     }
 

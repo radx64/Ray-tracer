@@ -63,7 +63,7 @@ void textInterface()
                 
                 if(image[x][y].red > 10000)
                 {
-                    pngImage[pngImage.get_height()-y-1][x] = png::rgb_pixel(100, 100, 100); 
+                    pngImage[pngImage.get_height()-y-1][x] = png::rgb_pixel(50, 50, 50); 
                 }
 
                 else if(image[x][y].red > 20)
@@ -95,7 +95,7 @@ void textInterface()
 
                 if ((x == 256-80) && (y == 256))
                 {
-                    logger.dbg() << "Probing:" << (unsigned int)(image[x][y]).red;
+                    logger.dbg() << "Probing at x:"<< x <<" y:"<< y << " = " << (unsigned int)(image[x][y]).red;
                 }
             }
         }
@@ -103,8 +103,8 @@ void textInterface()
         pngImage.write("../render.png");
 
     }
-    catch(std::string str)
+    catch(const std::string& e)
     {
-        std::cout << "Exception was thrown: " << str << std::endl;
+        logger.err() << "Exception was thrown: " << "\n" << "\t"<< e;
     }
 }

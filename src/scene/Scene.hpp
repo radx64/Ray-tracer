@@ -5,6 +5,7 @@
 #include <string>
 
 #include "core/Object.hpp"
+#include "shape/Light.hpp"
 
 namespace rt
 {
@@ -17,14 +18,16 @@ public:
     Scene()
     { }
     void addObject(core::Object::Ptr object);
+    void addLight(shape::Light::Ptr light);
 
     void setName(std::string name);
     std::string getName();
     std::vector<core::Object::Ptr> getObjects();
+    std::vector<shape::Light::Ptr> getLights();
 
 private:
     std::vector<core::Object::Ptr> objects_;
-    //std::vector<core::Object::Ptr> Lights_;
+    std::vector<shape::Light::Ptr> lights_;
     std::string name_;
 };
 

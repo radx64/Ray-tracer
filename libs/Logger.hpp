@@ -77,12 +77,12 @@ public:
 
     Flusher err()
     {
-        return Flusher(prefix_+"/"+terminal::Color(terminal::FG_LIGHT_RED).get()+"ERR"+terminal::Color(terminal::FG_DEFAULT).get());
+        return Flusher(prefix_+"/"+terminal::Color(terminal::FG_RED).get()+"ERR"+terminal::Color(terminal::FG_DEFAULT).get());
     }
 
     Flusher inf()
     {
-        return Flusher(prefix_+"/"+terminal::Color(terminal::FG_LIGHT_GREEN).get()+"INF"+terminal::Color(terminal::FG_DEFAULT).get());
+        return Flusher(prefix_+"/"+terminal::Color(terminal::FG_GREEN).get()+"INF"+terminal::Color(terminal::FG_DEFAULT).get());
     }
 
 

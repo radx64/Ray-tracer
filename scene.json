@@ -5,7 +5,8 @@
         "objects" : 
         [
             {
-                "sphere" : 
+                "type" : "sphere",
+                "config" :  
                 {
                     "position" :
                      {
@@ -23,7 +24,8 @@
                 }
             },
             {
-                "sphere" : 
+                "type" : "sphere",
+                "config" : 
                 {
                     "position" :
                      {
@@ -41,7 +43,8 @@
                 }
             },
             {
-                "sphere" : 
+                "type" : "sphere",
+                "config" : 
                 {
                     "position" :
                      {
@@ -57,7 +60,25 @@
                     },
                     "radius" : 150
                 }
-            }           
+            },
+            {
+                "type" : "light",
+                "config" : 
+                {
+                    "position" :
+                     {
+                        "x" : 90.0,
+                        "y" : 50.0,
+                        "z" : -40.0
+                    },
+                    "color" :
+                    {
+                        "r" : 255,
+                        "g" : 255,
+                        "b" : 255
+                    }
+                }
+            }                      
         ]
     }
 }l
