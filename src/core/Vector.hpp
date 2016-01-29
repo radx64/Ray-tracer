@@ -26,6 +26,7 @@ public:
     void normalize();
 
     Vector operator+(const Point& p);
+    Vector operator*(const double& scale);
     Vector operator=(const Point& p);
 };
 

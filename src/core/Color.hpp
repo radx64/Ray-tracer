@@ -12,6 +12,11 @@ public:
     double red;
     double green;
     double blue;
+
+    Color operator + (const Color& c);
+    Color operator - (const Color& c);
+    Color operator * (const double& mult);
+
 };
 
 }  // namesapce core

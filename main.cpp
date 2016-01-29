@@ -20,7 +20,7 @@ Logger logger("Main");
 
 int main(int argc, char** argv)
 {
-    logger.setLevel(LogLevel::INF);
+    logger.setLevel(LogLevel::DBG);
     printIntro();
     logger.inf() << "Params given: " << argc <<" to executable: "<< argv[0];
     if (argc > 1)
@@ -38,7 +38,7 @@ int main(int argc, char** argv)
 
 void guiInterface(int argc, char** argv)
 {
-    std::cout << "NOT IMPLEMENTED YET!. USE TEXT INTERFACE." << std::endl;
+    logger.err() << "NOT IMPLEMENTED YET!. USE TEXT INTERFACE.";
 }
 
 void textInterface()
@@ -61,38 +61,10 @@ void textInterface()
         {
             for (size_t x = 0; x < pngImage.get_width(); ++x)
             {
-                
-                if(image[x][y].red > 10000)
-                {
-                    pngImage[pngImage.get_height()-y-1][x] = png::rgb_pixel(50, 50, 50); 
-                }
-
-                else if(image[x][y].red > 20)
-                {
-                    pngImage[pngImage.get_height()-y-1][x] = png::rgb_pixel(255, 0, 0); 
-                }
-                else if (image[x][y].red > 15)
-                {
-                    pngImage[pngImage.get_height()-y-1][x] = png::rgb_pixel(0, 255, 0); 
-                }
-                else if (image[x][y].red > 10)
-                {
-                    pngImage[pngImage.get_height()-y-1][x] = png::rgb_pixel(0, 0, 255); 
-                }
-                else if (image[x][y].red > 5)
-                {
-                    pngImage[pngImage.get_height()-y-1][x] = png::rgb_pixel(0, 255, 255); 
-                }
-                else
-                {
-                    double d = image[x][y].red * 79;
-                    char depth = std::min(char(d), char(255));
-                    pngImage[pngImage.get_height()-y-1][x] = png::rgb_pixel(depth, depth, depth);
-                }
-                if (image[x][y].red < 0)
-                {
-                    pngImage[pngImage.get_height()-y-1][x] = png::rgb_pixel(100, 100, 0); 
-                }
+                pngImage[pngImage.get_height()-y-1][x] = png::rgb_pixel(
+                    image[x][y].red,
+                    image[x][y].green,
+                    image[x][y].blue);
 
                 if ((x == 256-80) && (y == 256))
                 {

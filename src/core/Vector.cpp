@@ -45,6 +45,11 @@ Vector Vector::operator+(const Point& p)
     return Vector(x_ +p.getX(), y_ + p.getY(), z_ + p.getZ());
 }
 
+Vector Vector::operator*(const double& scale)
+{
+    return Vector(x_ * scale, y_ * scale, z_ * scale);
+}
+
 Vector Vector::operator=(const Point& p)
 {
     return Vector(p.getX(),p.getY(),p.getZ());;
