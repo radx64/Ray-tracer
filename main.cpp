@@ -20,6 +20,7 @@ Logger logger("Main");
 
 int main(int argc, char** argv)
 {
+    logger.setLevel(LogLevel::INF);
     printIntro();
     logger.inf() << "Params given: " << argc <<" to executable: "<< argv[0];
     if (argc > 1)

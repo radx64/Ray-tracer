@@ -28,17 +28,18 @@ void Raytracer::run()
 
             core::Ray viewRay(orgin, direction);
 
-            Color c = trace(viewRay, 1);
+            core::Color c = trace(viewRay, 1);
             buffer_[width+IMG_SIDE/2][height+IMG_SIDE/2] = c;
         }
     }
     logger_.dbg() << "Hit: " << hitCounter_;
     logger_.dbg() << "NoHit: " << noHitCounter_;
+    logger_.inf() << "Hit ratio: " << (static_cast<float>(hitCounter_)/(hitCounter_+ noHitCounter_) * 100.0) << "\%";
 }
 
-Color Raytracer::trace(core::Ray& ray, int recursiveStep)
+core::Color Raytracer::trace(core::Ray& ray, int recursiveStep)
 {
-    Color local;
+    core::Color local;
 
     double distance = 1000000.0f;
 
@@ -62,7 +63,7 @@ Color Raytracer::trace(core::Ray& ray, int recursiveStep)
         distance = 1000000.0f;
     }
 
-    Color c = {distance, distance, distance};
+    core::Color c = {distance, distance, distance};
     return c;
 }
 

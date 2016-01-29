@@ -3,22 +3,22 @@
 
 #include <vector>
 
-#include "scene/Scene.hpp"
-#include "Pixel.hpp"
-
 #include <libs/Logger.hpp>
+
+#include "scene/Scene.hpp"
+#include "core/Color.hpp"
+
 
 namespace rt
 {
 
 // whole dynamic image scaling will be implemented. This one below is only for testing purposes.
-
 #define IMG_SIDE 512
 
 class Raytracer
 {
 public:
-	using Image = std::vector<std::vector<Color>>;
+	using Image = std::vector<std::vector<core::Color>>;
 	Raytracer() : logger_("Raytracer")
 	{
 		buffer_.resize(IMG_SIDE);
@@ -36,7 +36,7 @@ public:
 	Image getImage();
 
 private:
-	Color trace(core::Ray& ray, int recursiveStep);
+	core::Color trace(core::Ray& ray, int recursiveStep);
 	Image buffer_;
 	scene::Scene scene_;
 
