@@ -3,6 +3,7 @@
 
 #include <memory>
 
+#include "Material.hpp"
 #include "Point.hpp"
 #include "Ray.hpp"
 
@@ -19,6 +20,9 @@ public:
     Object() : position_(0.0,0.0,0.0)
     { }
 
+    void setMaterial(Material material);
+    Material getMaterial();
+
     void setPosition(Point& p);
     Point getPosition();
 
@@ -28,6 +32,7 @@ public:
 
 private:
     Point position_;
+    Material material_;
 };
 
 }  // namespace core

@@ -84,9 +84,9 @@ core::Color Raytracer::trace(core::Ray& ray, int recursiveStep)
         // double t = sqrtf(distance.dotProduct(distance));
 
         // PHONG lighting model
-        double a = 1.0;
+        double a = 0.1;
         double b = 0.01;
-        double c = 0.001;
+        double c = 0.00025;
 
         core::Vector V = ray.getDirection();    // observation vector
         core::Vector L = light->getPosition() - collision; // light incidence vector
@@ -100,24 +100,20 @@ core::Color Raytracer::trace(core::Ray& ray, int recursiveStep)
 
         double dotVR = R.dotProduct(V) * 1.1; // angle betwen observation vector and reflected vector
 
-        if (dotVR < 0) dotVR = 0;
+        if (dotVR < 0) dotVR = -dotVR;
 
         core::Vector difference = light->getPosition() - collision;
         double di = sqrtf(difference.getX() * difference.getX() +
             difference.getY() * difference.getY() + 
             difference.getZ() * difference.getZ());
 
-        //local += closestObject->
-
-                    //object Color                       //light color                     //some weird phong sh*t
-
-        local = local + core::Color{127.0,127.0,255.0} + core::Color{255.0,255.0,255.0} * (0.5/ (a+ b*di + c*di*di));
+        local = local + closestObject->getMaterial().ambient + light->getColor() * (0.5/ (a+ b*di + c*di*di));
 
     }
 
-    if (local.red >= 255) local.red = 254;
-    if (local.green >= 255) local.green = 254;
-    if (local.blue >= 255) local.blue = 254;
+    if (local.red >= 255) local.red = 255;
+    if (local.green >= 255) local.green = 255;
+    if (local.blue >= 255) local.blue = 255;
 
     return local;
 }

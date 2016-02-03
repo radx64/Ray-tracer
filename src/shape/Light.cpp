@@ -10,6 +10,15 @@ Light::Light() : logger_("Light")
 
 }
 
+void Light::setColor(core::Color color)
+{
+    color_ = color;
+}
+core::Color Light::getColor()
+{
+    return color_;
+}
+
 core::Vector Light::getNormalAt(core::Point& p)
 {
 	return core::Vector(0.0,0.0,0.0);

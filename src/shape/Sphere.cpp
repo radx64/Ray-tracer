@@ -14,6 +14,7 @@ void Sphere::setRadius(double radius)
     radius_ = radius;
     logger_.inf() << "Radius set to " << radius;
 }
+
 double Sphere::getRadius()
 {
     return radius_;

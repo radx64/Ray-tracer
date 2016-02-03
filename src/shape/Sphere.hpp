@@ -16,7 +16,7 @@ namespace shape
 class Sphere : public core::Object
 {
 public:
-    typedef std::shared_ptr<Sphere> Ptr;
+    using Ptr = std::shared_ptr<Sphere>;
     
     Sphere() : logger_("Sphere")
     { }
