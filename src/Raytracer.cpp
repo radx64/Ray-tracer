@@ -84,9 +84,9 @@ core::Color Raytracer::trace(core::Ray& ray, int recursiveStep)
         // double t = sqrtf(distance.dotProduct(distance));
 
         // PHONG lighting model
-        double a = 0.1;
+        double a = 1.0;
         double b = 0.01;
-        double c = 0.00025;
+        double c = 0.0001;
 
         core::Vector V = ray.getDirection();    // observation vector
         core::Vector L = light->getPosition() - collision; // light incidence vector
@@ -100,14 +100,20 @@ core::Color Raytracer::trace(core::Ray& ray, int recursiveStep)
 
         double dotVR = R.dotProduct(V) * 1.1; // angle betwen observation vector and reflected vector
 
-        if (dotVR < 0) dotVR = -dotVR;
+        if (dotVR < 0) dotVR = 0;
 
         core::Vector difference = light->getPosition() - collision;
         double di = sqrtf(difference.getX() * difference.getX() +
             difference.getY() * difference.getY() + 
             difference.getZ() * difference.getZ());
 
-        local = local + closestObject->getMaterial().ambient + light->getColor() * (0.5/ (a+ b*di + c*di*di));
+        // * (Settings.Objects[closest_object]->material.diffuse * current.Light_params.diffuse * (dotNL) + Settings.Objects[closest_object]->material.specular * current.Light_params.specular * pow(dotVR,Settings.Objects[closest_object]->material.shine_factor));
+
+        double lightning_factor = 1.0/(a+ b*di + c*di*di);
+        local = local + closestObject->getMaterial().ambient + light->getColor() * lightning_factor;
+        // + closestObject->getMaterial().diffuse * light->getColor() * lightning_factor * dotNL
+        // + closestObject->getMaterial().specular * light->getColor() * pow(dotVR, 10);
+
 
     }
 

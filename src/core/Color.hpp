@@ -14,8 +14,10 @@ public:
     double blue;
 
     Color operator + (const Color& c);
+    Color operator + (const double& inc);
     Color operator - (const Color& c);
     Color operator * (const double& mult);
+    Color operator * (const Color& rhs);
 
 };
 
