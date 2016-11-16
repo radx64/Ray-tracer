@@ -10,4 +10,4 @@ Below is a screenshot of first depth map render at very low resolution. Better t
 ![Imgur](http://i.imgur.com/vRE6EGF.png?1)
 
 ## First phong model ##
-![](https://raw.githubusercontent.com/radx64/Raytracer/master/render.png)
+![](https://raw.githubusercontent.com/radx64/raytracer/master/render.png)
