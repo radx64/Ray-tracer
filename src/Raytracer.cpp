@@ -24,7 +24,7 @@ void Raytracer::run()
         for(int width =- IMG_SIDE/2; width<IMG_SIDE/2; width++)
         {
             core::Point orgin(width, height, 0.0);
-            core::Vector direction(0.0,0.0,-1.0);
+            core::Vector direction(0.0,0.0, -1.0);
 
             core::Ray viewRay(orgin, direction);
 
@@ -41,7 +41,7 @@ core::Color Raytracer::trace(core::Ray& ray, int recursiveStep)
 {
     core::Color local = {0.0,0.0,0.0};
 
-    double distance = 1000000.0f;
+    double distance = 10000.0f;
 
     auto objects = scene_.getObjects();
 
@@ -79,9 +79,6 @@ core::Color Raytracer::trace(core::Ray& ray, int recursiveStep)
     auto lights = scene_.getLights();
     for(auto& light : lights)
     {
-        // core::Vector distance = light->getPosition() - collision;
-
-        // double t = sqrtf(distance.dotProduct(distance));
 
         // PHONG lighting model
         double a = 1.0;
@@ -89,7 +86,7 @@ core::Color Raytracer::trace(core::Ray& ray, int recursiveStep)
         double c = 0.0001;
 
         core::Vector V = ray.getDirection();    // observation vector
-        core::Vector L = light->getPosition() - collision; // light incidence vector
+        core::Vector L = collision - light->getPosition(); // light incidence vector
         V.normalize();
         L.normalize();
 
@@ -98,28 +95,29 @@ core::Color Raytracer::trace(core::Ray& ray, int recursiveStep)
         core::Vector R = L - (normal * (2.0 * dotNL));    //reflected vector
         R.normalize();
 
-        double dotVR = R.dotProduct(V) * 1.1; // angle betwen observation vector and reflected vector
+        double dotVR = R.dotProduct(V) * 1.0; // angle betwen observation vector and reflected vector
 
         if (dotVR < 0) dotVR = 0;
 
-        core::Vector difference = light->getPosition() - collision;
-        double di = sqrtf(difference.getX() * difference.getX() +
+        core::Vector difference = collision - light->getPosition();
+
+        double di = sqrtf(
+            difference.getX() * difference.getX() +
             difference.getY() * difference.getY() + 
             difference.getZ() * difference.getZ());
 
-        // * (Settings.Objects[closest_object]->material.diffuse * current.Light_params.diffuse * (dotNL) + Settings.Objects[closest_object]->material.specular * current.Light_params.specular * pow(dotVR,Settings.Objects[closest_object]->material.shine_factor));
 
-        double lightning_factor = 1.0/(a+ b*di + c*di*di);
-        local = local + closestObject->getMaterial().ambient + light->getColor() * lightning_factor;
-        // + closestObject->getMaterial().diffuse * light->getColor() * lightning_factor * dotNL
-        // + closestObject->getMaterial().specular * light->getColor() * pow(dotVR, 10);
-
-
+        double lightning_factor = 1.0 / (a + b*di + c*di*di);
+        local = local + closestObject->getMaterial().ambient + light->getColor() * lightning_factor
+        //+ closestObject->getMaterial().diffuse * light->getColor()  * dotNL * 0.004
+        + closestObject->getMaterial().specular * light->getColor() * pow(dotVR, 50);
+        ;
     }
 
-    if (local.red >= 255) local.red = 255;
+    if (local.red >= 255.0) local.red = 255;
     if (local.green >= 255) local.green = 255;
     if (local.blue >= 255) local.blue = 255;
+
 
     return local;
 }

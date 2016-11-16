@@ -1,8 +1,7 @@
 #include "Vector.hpp"
 
 #include <cmath>
-
-#include <iostream>
+#include <string>
 
 namespace rt
 {
@@ -33,11 +32,7 @@ void Vector::normalize()
 
 bool Vector::isZero()
 {
-    if ((0 == x_) && (0 == y_) && (0 == z_))
-    {
-        return true;
-    }
-    return false;
+    return ((0 == x_) && (0 == y_) && (0 == z_));
 }
 
 Vector Vector::operator+(const Point& p)
@@ -48,11 +43,6 @@ Vector Vector::operator+(const Point& p)
 Vector Vector::operator*(const double& scale)
 {
     return Vector(x_ * scale, y_ * scale, z_ * scale);
-}
-
-Vector Vector::operator=(const Point& p)
-{
-    return Vector(p.getX(),p.getY(),p.getZ());;
 }
 
 }  // namespace core

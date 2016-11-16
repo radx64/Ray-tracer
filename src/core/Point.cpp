@@ -55,5 +55,13 @@ std::ostream& operator<< (std::ostream& s, Point p)
     return s << "[" << p.getX() << ", " << p.getY() << ", " << p.getZ() << "]";
 }
 
+std::string Point::toString() const
+{
+    return std::string("["
+        + std::to_string(x_) + ","
+        + std::to_string(y_) + ","
+        + std::to_string(z_) + "]");
+}
+
 }  // namespace core
 }  // namespace rt 

@@ -31,6 +31,8 @@ public:
     Point operator - (const Point& p);
     double operator * (const Point& p);
 
+    std::string toString() const;
+
 protected:
     double x_;
     double y_;

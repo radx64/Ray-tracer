@@ -22,8 +22,7 @@ double Sphere::getRadius()
 
 core::Vector Sphere::getNormalAt(core::Point& p)
 {
-    core::Vector normal;
-    normal = p - getPosition();
+    core::Vector normal (core::Vector(p) - core::Vector(getPosition()));
     normal.normalize();
     return normal;
 }

@@ -17,7 +17,7 @@ public:
     { };
     Vector(const Point& p) : Point(p)
     { };
-    Vector(const Vector& v) : Point(x_,y_,z_)
+    Vector(const Vector& v) : Point(v.x_,v.y_,v.z_)
     { };
 
     Vector crossProduct(const Vector& v);
@@ -27,7 +27,6 @@ public:
 
     Vector operator+(const Point& p);
     Vector operator*(const double& scale);
-    Vector operator=(const Point& p);
 };
 
 }  // namespace core
