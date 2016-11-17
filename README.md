@@ -1,7 +1,7 @@
 # Raytracer
 3D scenes generation using ray tracing method
 
-[![Build Status](https://travis-ci.org/radx64/Raytracer.svg)](https://travis-ci.org/radx64/Raytracer)
+[![Build Status](https://travis-ci.org/radx64/raytracer.svg)](https://travis-ci.org/radx64/raytracer)
 
 
 ## First render ##
@@ -11,3 +11,12 @@ Below is a screenshot of first depth map render at very low resolution. Better t
 
 ## First phong model ##
 ![](https://raw.githubusercontent.com/radx64/raytracer/master/render.png)
+
+
+### TODO:
+* [ ] Color clamping
+* [ ] Recursive tracing (reflections, refractions)
+* [ ] Antialiasing 
+* [ ] More shapes (triangle, plane, torus, cone, etc...)
+* [ ] Obj files parsing
+* [ ] Texture materials (UV mapping)
