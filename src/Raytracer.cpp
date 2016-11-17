@@ -82,8 +82,8 @@ core::Color Raytracer::trace(core::Ray& ray, int recursiveStep)
 
         // PHONG lighting model
         double a = 1.0;
-        double b = 0.01;
-        double c = 0.0001;
+        double b = 1.0;
+        double c = 0.1;
 
         core::Vector V = ray.getDirection();    // observation vector
         core::Vector L = collision - light->getPosition(); // light incidence vector
@@ -109,8 +109,8 @@ core::Color Raytracer::trace(core::Ray& ray, int recursiveStep)
 
         double lightning_factor = 1.0 / (a + b*di + c*di*di);
         local = local + closestObject->getMaterial().ambient + light->getColor() * lightning_factor
-        //+ closestObject->getMaterial().diffuse * light->getColor()  * dotNL * 0.004
-        + closestObject->getMaterial().specular * light->getColor() * pow(dotVR, 180);
+        //+ closestObject->getMaterial().diffuse * light->getColor()  * dotNL * 0.0005
+        + closestObject->getMaterial().specular * light->getColor() * pow(dotVR, 4) * 0.008;
         ;
     }
 
