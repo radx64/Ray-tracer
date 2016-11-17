@@ -13,10 +13,10 @@ Below is a screenshot of first depth map render at very low resolution. Better t
 ![](https://raw.githubusercontent.com/radx64/raytracer/master/render.png)
 
 
-TODO:
-[ ] color clamping
-[ ] recursive tracing (reflections, refractions)
-[ ] antialiasing 
-[ ] more shapes (triangle, plane, torus, cone, etc...)
-[ ] obj files parsing
-[ ] texture materials (UV mapping)
+### TODO:
+* [ ] Color clamping
+* [ ] Recursive tracing (reflections, refractions)
+* [ ] Antialiasing 
+* [ ] More shapes (triangle, plane, torus, cone, etc...)
+* [ ] Obj files parsing
+* [ ] Texture materials (UV mapping)
