@@ -29,9 +29,29 @@ void Raytracer::run()
             core::Ray viewRay(orgin, direction);
 
             core::Color c = trace(viewRay, 1);
+
+            /* need to implement some exponential color clamping */
+            if (c.red > 255) c.red = 255;
+            if (c.green > 255) c.green = 255;
+            if (c.blue > 255) c.blue = 255; 
+
+            if (c.red < 0) c.red = 0;
+            if (c.green < 0) c.green = 0;
+            if (c.blue < 0) c.blue = 0; 
+
             buffer_[width+IMG_SIDE/2][height+IMG_SIDE/2] = c;
         }
     }
+
+    for(int height=-IMG_SIDE/2; height < IMG_SIDE/2; height++)
+    {
+        for(int width =- IMG_SIDE/2; width<IMG_SIDE/2; width++)
+        {
+            core::Color c = buffer_[width+IMG_SIDE/2][height+IMG_SIDE/2];
+            buffer_[width+IMG_SIDE/2][height+IMG_SIDE/2] = c;
+        }
+    }
+
     logger_.dbg() << "Hit: " << hitCounter_;
     logger_.dbg() << "NoHit: " << noHitCounter_;
     logger_.inf() << "Hit ratio: " << (static_cast<float>(hitCounter_)/(hitCounter_+ noHitCounter_) * 100.0) << "\%";
@@ -83,10 +103,10 @@ core::Color Raytracer::trace(core::Ray& ray, int recursiveStep)
         // PHONG lighting model
         double a = 1.0;
         double b = 0.01;
-        double c = 0.0001;
+        double c = 0.01;
 
         core::Vector V = ray.getDirection();    // observation vector
-        core::Vector L = collision - light->getPosition(); // light incidence vector
+        core::Vector L = light->getPosition() - collision; // light incidence vector
         V.normalize();
         L.normalize();
 
@@ -95,7 +115,7 @@ core::Color Raytracer::trace(core::Ray& ray, int recursiveStep)
         core::Vector R = L - (normal * (2.0 * dotNL));    //reflected vector
         R.normalize();
 
-        double dotVR = R.dotProduct(V) * 1.0; // angle betwen observation vector and reflected vector
+        double dotVR = V.dotProduct(R) * -1.0; // angle betwen observation vector and reflected vector
 
         if (dotVR < 0) dotVR = 0;
 
@@ -109,15 +129,9 @@ core::Color Raytracer::trace(core::Ray& ray, int recursiveStep)
 
         double lightning_factor = 1.0 / (a + b*di + c*di*di);
         local = local + closestObject->getMaterial().ambient + light->getColor() * lightning_factor
-        //+ closestObject->getMaterial().diffuse * light->getColor()  * dotNL * 0.004
-        + closestObject->getMaterial().specular * light->getColor() * pow(dotVR, 180);
-        ;
+        + closestObject->getMaterial().diffuse + light->getColor()  * dotNL
+        + closestObject->getMaterial().specular * light->getColor() * 0.2 * pow(dotVR, 20);
     }
-
-    if (local.red >= 255.0) local.red = 255;
-    if (local.green >= 255) local.green = 255;
-    if (local.blue >= 255) local.blue = 255;
-
 
     return local;
 }

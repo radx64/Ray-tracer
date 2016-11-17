@@ -93,7 +93,7 @@ core::Color Loader::loadColor(Json::Value& objectNode, std::string colorName)
     double r = color.get("r", "0.0").asDouble();
     double g = color.get("g", "0.0").asDouble();
     double b = color.get("b", "0.0").asDouble(); 
-    return core::Color{r, b, g};
+    return core::Color{r, g, b};
 }
 
 void Loader::loadSphere(Scene& scene, Json::Value& objectNode)

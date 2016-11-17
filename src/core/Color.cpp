@@ -30,5 +30,13 @@ namespace core
     	return Color{red*rhs.red, green*rhs.green, blue*rhs.blue};
     }
 
+    std::string Color::toString()
+    {
+        return std::string("["
+        + std::to_string(red) + ","
+        + std::to_string(green) + ","
+        + std::to_string(blue) + "]");
+    }
+
 }  // namesapce core
 }  // namespace rt

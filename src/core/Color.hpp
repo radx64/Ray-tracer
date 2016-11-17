@@ -1,6 +1,8 @@
 #ifndef RT_CORE_COLOR_HPP_
 #define RT_CORE_COLOR_HPP_
 
+#include <string>
+
 namespace rt
 {
 namespace core
@@ -12,6 +14,8 @@ public:
     double red;
     double green;
     double blue;
+
+    std::string toString();
 
     Color operator + (const Color& c);
     Color operator + (const double& inc);
