@@ -24,7 +24,7 @@ void Raytracer::run()
         for(int width =- IMG_SIDE/2; width<IMG_SIDE/2; width++)
         {
             core::Point orgin(width, height, 0.0);
-            core::Vector direction(0.0,0.0, -1.0);
+            core::Vector direction(0.0,0.0, 1.0);
 
             core::Ray viewRay(orgin, direction);
 
@@ -61,7 +61,7 @@ core::Color Raytracer::trace(core::Ray& ray, int recursiveStep)
 {
     core::Color local = {0.0,0.0,0.0};
 
-    double distance = 10000.0f;
+    double distance = 100000.0f;
 
     auto objects = scene_.getObjects();
 
@@ -103,21 +103,37 @@ core::Color Raytracer::trace(core::Ray& ray, int recursiveStep)
         // PHONG lighting model
         double a = 1.0;
         double b = 0.01;
-        double c = 0.01;
+        double c = 0.001;
 
-        core::Vector V = ray.getDirection();    // observation vector
+        core::Vector V = ray.getDirection() ;    // observation vector
         V.normalize();
-        core::Vector L = collision - light->getPosition(); // light incidence vector
+        core::Vector L = light->getPosition() - collision; // light incidence vector
         L.normalize();
 
-        double dotNL = normal.dotProduct(L);
+        double t2 = sqrtf(L.dotProduct(L));
+        core::Vector lightDirection = L * (2.0f/t2);
+        lightDirection.normalize();
+        core::Ray lightRay(collision, lightDirection);
 
-        core::Vector R = (normal * dotNL * 2.0)  - L;   //reflected vector
+        bool isInShadow = false;
+
+        for(auto& object : objects)
+        {
+            if(object->hit(lightRay, t2))
+            {
+                isInShadow = true;
+                break;
+            }
+        };
+
+        double dotNL = normal.dotProduct(L) ;
+
+        core::Vector R = L - (normal * dotNL * 2.0);   //reflected vector
         R.normalize();
 
         double dotVR = V.dotProduct(R) ; // angle betwen observation vector and reflected vector
 
-        if (dotVR > 0) dotVR = 0;
+        if (dotVR < 0) dotVR = 0;
 
         core::Vector difference = collision - light->getPosition();
 
@@ -126,12 +142,19 @@ core::Color Raytracer::trace(core::Ray& ray, int recursiveStep)
             difference.getY() * difference.getY() + 
             difference.getZ() * difference.getZ());
 
-
         double lightning_factor = 1.0 / (a + b*di + c*di*di);
-        local = local + closestObject->getMaterial().ambient + light->getColor() * lightning_factor
-        + closestObject->getMaterial().diffuse * light->getColor()  * dotNL * 0.03
+
+        // if (isInShadow)
+        // {
+        //     return local + closestObject->getMaterial().ambient;
+        // }
+        
+        local = local //+ closestObject->getMaterial().ambient * lightning_factor
+        + closestObject->getMaterial().diffuse * light->getColor()  * dotNL * 0.02
         + closestObject->getMaterial().specular * light->getColor() * pow(dotVR, 40) * 0.5;
         ;
+
+
     }
 
     return local;

@@ -21,27 +21,29 @@ double Sphere::getRadius()
 
 core::Vector Sphere::getNormalAt(core::Point& p)
 {
-    core::Vector normal (core::Vector(getPosition() - core::Vector(p) ));
+    core::Vector normal (p - getPosition());
     normal.normalize();
     return normal;
 }
 
-bool Sphere::hit(core::Ray r, double& dist)
+bool Sphere::hit(core::Ray r, double& t)
 {
-    core::Vector to = getPosition() - r.getOrgin();
-    double b = to.dotProduct(r.getDirection());
-    double c = to.dotProduct(to) - getRadius()*getRadius();
-    double d = b*b - c;
-    if (d < 0) return false;
+    core::Vector dist = getPosition() - r.getOrgin();
+    double b = dist.dotProduct(r.getDirection());
+    double d = b*b - dist.dotProduct(dist) + getRadius() * getRadius();
+    if (d < 0.0f) return false;
     d = sqrtf(d);
-    double t0 = - b - d;
-    double t1 = - b + d;
+    double t0 = b - d;
+    double t1 = b + d;
 
-    if (t0 > 0 && t0 < t1) t1 = t0;
-
-    if (t1 > 1)
+    if (t0 >= -0.5f && t0 < t)
     {
-        if(t1 < dist) dist = t1;
+        t = t0;
+    }
+
+    if (t1 > -0.5f)
+    {
+        if(t1 < t) t = t1;
         return true;
     }
 }
