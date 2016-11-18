@@ -127,7 +127,7 @@ core::Color Raytracer::trace(core::Ray& ray, int recursiveStep)
 
         double lightning_factor = 1.0 / (a + b*di + c*di*di);
         local = local + closestObject->getMaterial().ambient + light->getColor() * lightning_factor
-        + closestObject->getMaterial().diffuse + light->getColor()  * dotNL
+        + closestObject->getMaterial().diffuse * light->getColor()  * dotNL * 0.03
         + closestObject->getMaterial().specular * light->getColor() * pow(dotVR, 180);
         ;
     }
