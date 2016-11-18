@@ -106,16 +106,18 @@ core::Color Raytracer::trace(core::Ray& ray, int recursiveStep)
         double c = 0.01;
 
         core::Vector V = ray.getDirection();    // observation vector
-        core::Vector L = collision - light->getPosition(); // light incidence vector
         V.normalize();
+        core::Vector L = collision - light->getPosition(); // light incidence vector
         L.normalize();
 
         double dotNL = normal.dotProduct(L);
 
-        core::Vector R = L - (normal * (2.0 * dotNL));    //reflected vector
+        core::Vector R = (normal * dotNL * 2.0)  - L;   //reflected vector
         R.normalize();
 
         double dotVR = V.dotProduct(R) ; // angle betwen observation vector and reflected vector
+
+        if (dotVR > 0) dotVR = 0;
 
         core::Vector difference = collision - light->getPosition();
 
@@ -128,7 +130,7 @@ core::Color Raytracer::trace(core::Ray& ray, int recursiveStep)
         double lightning_factor = 1.0 / (a + b*di + c*di*di);
         local = local + closestObject->getMaterial().ambient + light->getColor() * lightning_factor
         + closestObject->getMaterial().diffuse * light->getColor()  * dotNL * 0.03
-        + closestObject->getMaterial().specular * light->getColor() * pow(dotVR, 180);
+        + closestObject->getMaterial().specular * light->getColor() * pow(dotVR, 40) * 0.5;
         ;
     }
 
