@@ -25,6 +25,7 @@ void Raytracer::run()
         {
             core::Point orgin(width, height, 0.0);
             core::Vector direction(0.0,0.0, 1.0);
+            direction.normalize();
 
             core::Ray viewRay(orgin, direction);
 
@@ -70,16 +71,10 @@ core::Color Raytracer::trace(core::Ray& ray, int recursiveStep)
     for(auto& object : objects)
     {
 
-        double temporaryDistance = distance;
-
-        if(object->hit(ray, temporaryDistance))
+        if(object->hit(ray, distance))
         {
             hitCounter_++;
-            if(temporaryDistance < distance)
-            {
-                distance = temporaryDistance;
-                closestObject = object;
-            }
+            closestObject = object;
 
         }
         else
@@ -90,7 +85,7 @@ core::Color Raytracer::trace(core::Ray& ray, int recursiveStep)
 
     if (closestObject == nullptr)
     {
-        return core::Color{0.0,0.0,0.0};
+        return core::Color{30.0, 30.0, 30.0};
     }
 
     core::Point collision = ray.getOrgin() + ray.getDirection() * distance;
@@ -105,7 +100,7 @@ core::Color Raytracer::trace(core::Ray& ray, int recursiveStep)
         double b = 0.01;
         double c = 0.001;
 
-        core::Vector V = ray.getDirection() ;    // observation vector
+        core::Vector V = ray.getDirection();    // observation vector
         V.normalize();
         core::Vector L = light->getPosition() - collision; // light incidence vector
         L.normalize();
@@ -119,7 +114,9 @@ core::Color Raytracer::trace(core::Ray& ray, int recursiveStep)
 
         for(auto& object : objects)
         {
-            if(object->hit(lightRay, t2))
+
+            double t2_tmp = t2;
+            if(object->hit(lightRay, t2_tmp))
             {
                 isInShadow = true;
                 break;
@@ -135,7 +132,7 @@ core::Color Raytracer::trace(core::Ray& ray, int recursiveStep)
 
         if (dotVR < 0) dotVR = 0;
 
-        core::Vector difference = collision - light->getPosition();
+        core::Vector difference = light->getPosition() - collision;
 
         double di = sqrtf(
             difference.getX() * difference.getX() +
@@ -144,14 +141,14 @@ core::Color Raytracer::trace(core::Ray& ray, int recursiveStep)
 
         double lightning_factor = 1.0 / (a + b*di + c*di*di);
 
-        // if (isInShadow)
-        // {
-        //     return local + closestObject->getMaterial().ambient;
-        // }
+        if (isInShadow)
+        {
+            return local + closestObject->getMaterial().ambient;
+        }
         
-        local = local //+ closestObject->getMaterial().ambient * lightning_factor
-        + closestObject->getMaterial().diffuse * light->getColor()  * dotNL * 0.02
-        + closestObject->getMaterial().specular * light->getColor() * pow(dotVR, 40) * 0.5;
+        local = local + closestObject->getMaterial().ambient * lightning_factor
+        + closestObject->getMaterial().diffuse * light->getColor()  * dotNL * lightning_factor * 10.0
+        + closestObject->getMaterial().specular * light->getColor() * pow(dotVR, 40) * 0.95;
         ;
 
 

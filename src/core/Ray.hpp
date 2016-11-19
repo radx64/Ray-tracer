@@ -20,6 +20,7 @@ public:
     void setOrgin(const Point& p);
     Vector getDirection();
     void setDirection(const Vector& v);
+    std::string toString() const;
 
 private:
     Point orgin_;

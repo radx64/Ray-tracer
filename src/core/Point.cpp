@@ -55,6 +55,11 @@ std::ostream& operator<< (std::ostream& s, Point p)
     return s << "[" << p.getX() << ", " << p.getY() << ", " << p.getZ() << "]";
 }
 
+Point Point::operator*(const double& scale)
+{
+    return Point(x_ * scale, y_ * scale, z_ * scale);
+}
+
 std::string Point::toString() const
 {
     return std::string("["
