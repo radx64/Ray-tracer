@@ -19,12 +19,22 @@ void Raytracer::load(scene::Scene& s)
 
 void Raytracer::run()
 {
+    double fovx = 90.0*(M_PI/180.0);
+    double fovy = 90.0*(M_PI/180.0);
+    
+    double hd;
+    double wd;
+
     for(int height=-IMG_SIDE/2; height < IMG_SIDE/2; height++)
     {
         for(int width =- IMG_SIDE/2; width<IMG_SIDE/2; width++)
         {
             core::Point orgin(width, height, 0.0);
-            core::Vector direction(0.0,0.0, 1.0);
+
+            hd = (float)height/(IMG_SIDE); 
+            wd = (float)width/(IMG_SIDE);
+
+            core::Vector direction((wd)*tan(fovx/2), (hd)*tan(fovy/2), 1.0);
             direction.normalize();
 
             core::Ray viewRay(orgin, direction);
