@@ -21,8 +21,8 @@ public:
     Sphere() : logger_("Sphere")
     { }
 
-    virtual core::Vector getNormalAt(core::Point& p);
-    virtual bool hit(core::Ray r, double& dist);
+    core::Vector getNormalAt(core::Point& p) override;
+    bool hit(core::Ray r, double& dist) override;
 
     void setRadius(double radius);
     double getRadius();

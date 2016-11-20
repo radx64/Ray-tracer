@@ -116,7 +116,7 @@ core::Color Raytracer::trace(core::Ray& ray, int recursiveStep)
         {
 
             double t2_tmp = t2;
-            if(object->hit(lightRay, t2_tmp))
+            if(object->isCastingShadow && object->hit(lightRay, t2_tmp))
             {
                 isInShadow = true;
                 break;

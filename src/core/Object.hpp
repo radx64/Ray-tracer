@@ -29,6 +29,8 @@ public:
     virtual Vector getNormalAt(Point& p) = 0;
     virtual bool hit(Ray r, double& dist) = 0;
 
+    bool isCastingShadow = true;
+
 
 private:
     Point position_;

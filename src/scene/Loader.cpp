@@ -6,6 +6,7 @@
 
 #include "core/Material.hpp"
 #include "shape/Sphere.hpp"
+#include "shape/Plane.hpp"
 #include "shape/Light.hpp"
 
 namespace rt
@@ -18,6 +19,7 @@ Loader::Loader() : logger_("Loader")
     objectMapping = 
     {
         {"sphere", ObjectType::Sphere},
+        {"plane", ObjectType::Plane},
         {"light" , ObjectType::Light}
     };
 }
@@ -44,6 +46,7 @@ Scene Loader::load(std::string filename)
         switch(objectMapping[objectType])
         {
             case ObjectType::Sphere : loadSphere(scene, object); break;
+            case ObjectType::Plane  : loadPlane(scene, object); break;
             case ObjectType::Light  : loadLight(scene, object); break;
             default : throw std::string("Unknown object type: ") + objectType;
         };
@@ -107,6 +110,19 @@ void Loader::loadSphere(Scene& scene, Json::Value& objectNode)
     
     object->setPosition(pos);
     object->setRadius(radius);
+    object->setMaterial(material);
+    scene.addObject(object);
+}
+
+void Loader::loadPlane(Scene& scene, Json::Value& objectNode)
+{
+    logger_.dbg()<< "Loading plane...";
+    Json::Value planeNode = objectNode.get("config", "null");  
+    shape::Plane::Ptr object = std::make_shared<shape::Plane>();
+    core::Point pos = loadPosition(planeNode);
+    core::Material material = loadMaterial(planeNode);
+    
+    object->setPosition(pos);
     object->setMaterial(material);
     scene.addObject(object);
 }

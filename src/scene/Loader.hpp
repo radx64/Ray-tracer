@@ -19,6 +19,7 @@ namespace scene
 enum class ObjectType
 {
     Sphere,
+    Plane,
     Light
 };
 
@@ -35,6 +36,7 @@ private:
     core::Material loadMaterial(Json::Value& objectNode);
     core::Color loadColor(Json::Value& objectNode, std::string colorName);
 	void loadSphere(Scene& scene, Json::Value& sphereNode);
+    void loadPlane(Scene& scene, Json::Value& planeNode);
     void loadLight(Scene& scene, Json::Value& lightNode);
 
 
