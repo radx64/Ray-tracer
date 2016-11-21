@@ -45,7 +45,7 @@ Point Point::operator - (const Point& p)
     return Point(getX()-p.getX(), getY()-p.getY(),getZ()-p.getZ());
 }
 
-double Point::operator * (const Point& p)
+double Point::operator * (const Point& p)   /* dot product - must change to method to be similar to vector*/
 {
     return getX()*p.getX() + getY()*p.getY() + getZ()*p.getZ();
 }

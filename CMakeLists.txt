@@ -22,7 +22,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}
 					src
 					libs/jsoncpp)
 
-add_definitions(-std=c++11)
+add_definitions(-std=c++11 -O3)
 
 add_subdirectory(src)
 add_subdirectory(libs)

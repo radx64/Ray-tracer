@@ -56,7 +56,7 @@ void textInterface()
         rt::Raytracer::Image image;
         image = raytracer.getImage();
 
-        png::image<png::rgb_pixel> pngImage(512, 512);
+        png::image<png::rgb_pixel> pngImage(IMG_SIDE, IMG_SIDE);
         for (size_t y = 0; y < pngImage.get_height(); ++y)
         {
             for (size_t x = 0; x < pngImage.get_width(); ++x)
@@ -65,11 +65,6 @@ void textInterface()
                     image[x][y].red,
                     image[x][y].green,
                     image[x][y].blue);
-
-                if ((x == 256-80) && (y == 256))
-                {
-                    logger.dbg() << "Probing at x:"<< x <<" y:"<< y << " = " << (unsigned int)(image[x][y]).red;
-                }
             }
         }
         

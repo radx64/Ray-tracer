@@ -31,12 +31,12 @@ bool Sphere::hit(core::Ray r, double& t)
     core::Vector dist = getPosition() - r.getOrgin();
     double b = dist.dotProduct(r.getDirection());
     double d = b*b - (dist.dotProduct(dist) - getRadius() * getRadius());
-    if (d < 0.0f) return false;
+    if (d <= 0.0f) return false;
     d = sqrtf(d);
     double t0 = b - d;
     double t1 = b + d;
 
-    if (t0 >= 0.5f && t0 < t)
+    if ((t0 >= 0.5f) && (t0 <= t))
     {
         t = t0;
     }

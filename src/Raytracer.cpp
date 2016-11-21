@@ -7,6 +7,23 @@
 namespace rt
 {
 
+core::Color clamp(core::Color c)
+{
+    /* need to implement some exponential color clamping or something*/
+
+    if (c.red > 255) c.red = 255;
+    if (c.green > 255) c.green = 255;
+    if (c.blue > 255) c.blue = 255; 
+
+    if (c.red < 0) c.red = 0;
+    if (c.green < 0) c.green = 0;
+    if (c.blue < 0) c.blue = 0;
+
+    return c;
+}
+
+static const int maxReccursionLimit = 3;
+
 Raytracer::Image Raytracer::getImage()
 {
     return buffer_;
@@ -21,7 +38,7 @@ void Raytracer::run()
 {
     double fovx = 90.0*(M_PI/180.0);
     double fovy = 90.0*(M_PI/180.0);
-    
+
     double hd;
     double wd;
 
@@ -39,18 +56,9 @@ void Raytracer::run()
 
             core::Ray viewRay(orgin, direction);
 
-            core::Color c = trace(viewRay, 1);
+            core::Color c = trace(viewRay, 0);
 
-            /* need to implement some exponential color clamping */
-            if (c.red > 255) c.red = 255;
-            if (c.green > 255) c.green = 255;
-            if (c.blue > 255) c.blue = 255; 
-
-            if (c.red < 0) c.red = 0;
-            if (c.green < 0) c.green = 0;
-            if (c.blue < 0) c.blue = 0; 
-
-            buffer_[width+IMG_SIDE/2][height+IMG_SIDE/2] = c;
+            buffer_[width+IMG_SIDE/2][height+IMG_SIDE/2] = clamp(c);
         }
     }
 
@@ -62,15 +70,13 @@ void Raytracer::run()
             buffer_[width+IMG_SIDE/2][height+IMG_SIDE/2] = c;
         }
     }
-
-    logger_.dbg() << "Hit: " << hitCounter_;
-    logger_.dbg() << "NoHit: " << noHitCounter_;
-    logger_.inf() << "Hit ratio: " << (static_cast<float>(hitCounter_)/(hitCounter_+ noHitCounter_) * 100.0) << "\%";
 }
 
-core::Color Raytracer::trace(core::Ray& ray, int recursiveStep)
+core::Color Raytracer::trace(core::Ray& ray, int reccursionStep)
 {
     core::Color local = {0.0,0.0,0.0};
+
+    if (reccursionStep > maxReccursionLimit) return local;
 
     double distance = 100000.0f;
 
@@ -83,14 +89,9 @@ core::Color Raytracer::trace(core::Ray& ray, int recursiveStep)
 
         if(object->hit(ray, distance))
         {
-            hitCounter_++;
             closestObject = object;
+        }
 
-        }
-        else
-        {
-            noHitCounter_++;    
-        }
     };
 
     if (closestObject == nullptr)
@@ -124,9 +125,7 @@ core::Color Raytracer::trace(core::Ray& ray, int recursiveStep)
 
         for(auto& object : objects)
         {
-
-            double t2_tmp = t2;
-            if(object->isCastingShadow && object->hit(lightRay, t2_tmp))
+            if(object->isCastingShadow && object->hit(lightRay, t2))
             {
                 isInShadow = true;
                 break;
@@ -153,16 +152,22 @@ core::Color Raytracer::trace(core::Ray& ray, int recursiveStep)
 
         if (isInShadow)
         {
-            return local + closestObject->getMaterial().ambient;
+            local = local + clamp(closestObject->getMaterial().ambient * lightning_factor);
+            local = local * 255.0;
         }
+        else
+        {
+            core::Color ambient = closestObject->getMaterial().ambient * lightning_factor;
+            core::Color diffuse = closestObject->getMaterial().diffuse * light->getColor()  * dotNL * lightning_factor * 10.0;
+            core::Color specular = closestObject->getMaterial().specular * light->getColor() * pow(dotVR, 40) * 0.95;
         
-        local = local + closestObject->getMaterial().ambient * lightning_factor
-        + closestObject->getMaterial().diffuse * light->getColor()  * dotNL * lightning_factor * 10.0
-        + closestObject->getMaterial().specular * light->getColor() * pow(dotVR, 40) * 0.95;
-        ;
-
-
+            local = local + clamp(ambient) + clamp(diffuse) + clamp(specular);
+        }
     }
+
+    core::Ray reflected(collision, ray.getDirection() - normal * (ray.getDirection().dotProduct(normal)) * 2.0);
+    core::Color reflectedColor = trace(reflected, reccursionStep + 1);
+    local = local + clamp(reflectedColor * 0.5);
 
     return local;
 }

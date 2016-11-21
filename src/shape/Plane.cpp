@@ -21,7 +21,8 @@ bool Plane::hit(core::Ray r, double& t)
 
     if (d >= 0) return false;
 
-    double distance = (getPosition() * r.getOrgin()) * -1.0/d + 900.0;
+    /* this 550 value is for testing purpose only (-y delta)*/
+    double distance = (getPosition() * r.getOrgin()) * -1.0/d + 300.0; 
 
     if(distance > 0 && distance < t)
     {
