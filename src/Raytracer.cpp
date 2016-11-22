@@ -153,7 +153,6 @@ core::Color Raytracer::trace(core::Ray& ray, int reccursionStep)
         if (isInShadow)
         {
             local = local + clamp(closestObject->getMaterial().ambient * lightning_factor);
-            local = local * 255.0;
         }
         else
         {
