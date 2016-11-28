@@ -14,6 +14,9 @@ public:
     Color ambient;
     Color specular;
     Color diffuse;
+
+    double refractionIndex;
+    double opacity;
 };
 
 }  // namesapce core

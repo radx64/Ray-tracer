@@ -75,9 +75,9 @@ Json::Value Loader::getOrDie(Json::Value node, std::string name)
 core::Point Loader::loadPosition(Json::Value& objectNode)
 {
     Json::Value position = getOrDie(objectNode, "position");
-    double x = position.get("x", "0.0").asDouble();
-    double y = position.get("y", "0.0").asDouble();
-    double z = position.get("z", "0.0").asDouble();
+    double x = position.get("x", 0.0).asDouble();
+    double y = position.get("y", 0.0).asDouble();
+    double z = position.get("z", 0.0).asDouble();
     return core::Point{x, y, z};    
 }
 
@@ -87,15 +87,17 @@ core::Material Loader::loadMaterial(Json::Value& objectNode)
     core::Color ambient = loadColor(material, "ambient");
     core::Color specular = loadColor(material, "specular");
     core::Color diffuse = loadColor(material, "diffuse");
-    return core::Material{ambient, specular, diffuse};
+    double refractionIndex = material.get("refractionIndex", 0.0).asDouble();
+    double opacity = material.get("opacity", 0.0).asDouble();
+    return core::Material{ambient, specular, diffuse, refractionIndex, opacity};
 }
 
 core::Color Loader::loadColor(Json::Value& objectNode, std::string colorName)
 {
     Json::Value color = getOrDie(objectNode, colorName);
-    double r = color.get("r", "0.0").asDouble();
-    double g = color.get("g", "0.0").asDouble();
-    double b = color.get("b", "0.0").asDouble(); 
+    double r = color.get("r", 0.0).asDouble();
+    double g = color.get("g", 0.0).asDouble();
+    double b = color.get("b", 0.0).asDouble(); 
     return core::Color{r, g, b};
 }
 
