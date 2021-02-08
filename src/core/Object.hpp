@@ -21,8 +21,9 @@ public:
     { }
 
     void setMaterial(Material material);
-    Material getMaterial();
-
+    const Material& getMaterial();
+    const core::Material& getMaterialAt(const Point& p);
+    virtual const core::Vector UV(const Point& p);
     void setPosition(Point& p);
     Point getPosition();
 

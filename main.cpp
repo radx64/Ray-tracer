@@ -20,7 +20,7 @@ int main(int argc, char** argv)
 {
     logger.setLevel(LogLevel::DBG);
     printIntro();
-    logger.inf() << argc << "params passed to executable: "<< argv[0];
+    logger.inf() << argc << " parameters passed to executable: "<< argv[0];
     textInterface();
     return 0;
 }

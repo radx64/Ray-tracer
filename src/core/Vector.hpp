@@ -22,11 +22,12 @@ public:
 
     Vector crossProduct(const Vector& v);
     double dotProduct(const Vector& v);
-    bool isZero();
+    double length() const;
+    bool isZero() const;
     void normalize();
 
-    Vector operator+(const Point& p);
-    Vector operator*(const double& scale);
+    Vector operator+(const Point& p) const;
+    Vector operator*(const double& scale) const;
 };
 
 }  // namespace core

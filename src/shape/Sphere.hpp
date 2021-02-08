@@ -27,6 +27,8 @@ public:
     void setRadius(double radius);
     double getRadius();
 
+    const core::Vector UV(const core::Point& p) override;
+
 private:
     double radius_;
     Logger logger_;

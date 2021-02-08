@@ -27,11 +27,11 @@ public:
     void setY(double y);
     void setZ(double z);
 
-    Point operator + (const Point& p);
-    Point operator - (const Point& p);
-    double operator * (const Point& p);
+    Point operator + (const Point& p) const;
+    Point operator - (const Point& p) const;
+    double operator * (const Point& p) const;
 
-    Point operator*(const double& scale);
+    Point operator*(const double& scale) const;
     
     std::string toString() const;
 

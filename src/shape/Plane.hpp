@@ -24,7 +24,8 @@ public:
     }
 
     core::Vector getNormalAt(core::Point& p) override;
-    bool hit(core::Ray r, double& dist) override; 
+    bool hit(core::Ray r, double& dist) override;
+    const core::Vector UV(const core::Point& p) override; 
 
 private:
     Logger logger_;

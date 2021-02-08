@@ -11,6 +11,7 @@ struct Camera
 {
     Point position_;
     Vector rotation_;
+    Vector fov_; // should use something like Vec2 for that but I'm lazy
 };
 
 }  // namespace rt::core

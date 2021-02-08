@@ -35,8 +35,10 @@ void Raytracer::load(scene::Scene& s)
 
 void Raytracer::run()
 {
-    double fovx = 90.0*(M_PI/180.0);
-    double fovy = 90.0*(M_PI/180.0);
+    const auto camera_fov = scene_.getCamera().fov_;
+
+    double fovx = camera_fov.getX()*(M_PI/180.0);
+    double fovy = camera_fov.getY()*(M_PI/180.0);
 
     double hd;
     double wd;
@@ -45,7 +47,12 @@ void Raytracer::run()
     {
         for(int width =- IMG_WIDTH/2; width<IMG_WIDTH/2; width++)
         {
-            core::Point orgin(width, height, 0.0);
+            const auto camera_position = scene_.getCamera().position_;
+
+            core::Point origin(
+                camera_position.getX() + width,
+                camera_position.getY() + height, 
+                camera_position.getZ() + 0.0);
 
             hd = (float)height/(IMG_HEIGHT); 
             wd = (float)width/(IMG_WIDTH);
@@ -53,13 +60,13 @@ void Raytracer::run()
             core::Vector direction((wd)*tan(fovx/2), (hd)*tan(fovy/2), 1.0);
             direction.normalize();
 
-            core::Ray viewRay(orgin, direction);
+            core::Ray viewRay(origin, direction);
 
             core::Color c = trace(viewRay, 0);
 
             buffer_[width+IMG_WIDTH/2][height+IMG_HEIGHT/2] = clamp(c);
         }
-        std::cout << "Render progress: " << (height + IMG_HEIGHT/2)*100.0 / IMG_HEIGHT << "%" << "\r";     
+        std::cout << "Render progress: " << (height + IMG_HEIGHT/2)*100 / IMG_HEIGHT << "%" << "\r";     
     }
 }
 
@@ -69,7 +76,7 @@ core::Color Raytracer::trace(core::Ray& ray, int reccursionStep)
 
     if (reccursionStep > maxReccursionLimit) return local;
 
-    double distance = 100000.0f;
+    double distance = 10000.0f;
 
     auto objects = scene_.getObjects();
 
@@ -85,7 +92,13 @@ core::Color Raytracer::trace(core::Ray& ray, int reccursionStep)
     core::Point collision = ray.getOrgin() + ray.getDirection() * distance;
     core::Vector normal = closestObject->getNormalAt(collision);
 
-    core::Material closestObjectMaterial = closestObject->getMaterial();
+    core::Material closestObjectMaterial = closestObject->getMaterialAt(collision);
+    core::Vector closestObjectUV = closestObject->UV(collision);
+
+    // checkered pattern fo UV map testing
+    bool checkered = false;
+    float sines = cos(M_PI*40 * closestObjectUV.getX()) * cos(M_PI*40.0 * closestObjectUV.getY());
+    if (sines < 0) checkered = true;
 
     auto lights = scene_.getLights();
     for(auto& light : lights)
@@ -93,7 +106,7 @@ core::Color Raytracer::trace(core::Ray& ray, int reccursionStep)
 
         // PHONG lighting model
         double a = 1.0;
-        double b = 0.01;
+        double b = 0.1;
         double c = 0.001;
 
         core::Vector V = ray.getDirection();    // observation vector
@@ -112,7 +125,7 @@ core::Color Raytracer::trace(core::Ray& ray, int reccursionStep)
         {
             if(object->isCastingShadow && object->hit(lightRay, t2))
             {
-                isInShadow = true;
+                //isInShadow = true;
                 break;
             }
         };
@@ -138,6 +151,7 @@ core::Color Raytracer::trace(core::Ray& ray, int reccursionStep)
         if (isInShadow)
         {
             local = local + clamp(closestObjectMaterial.ambient * lightning_factor);
+            local = core::Color{255.0,0.0,255.0};
         }
         else
         {
@@ -145,13 +159,18 @@ core::Color Raytracer::trace(core::Ray& ray, int reccursionStep)
             core::Color diffuse = closestObjectMaterial.diffuse * light->getColor()  * dotNL * lightning_factor * 10.0;
             core::Color specular = closestObjectMaterial.specular * light->getColor() * pow(dotVR, 40) * 0.95;
         
+            if (checkered)
+            {
+                diffuse = diffuse * 2.0;
+            }
+
             local = local + clamp(ambient) + clamp(diffuse) + clamp(specular);
         }
     }
 
     core::Ray reflected(collision, ray.getDirection() - normal * (ray.getDirection().dotProduct(normal)) * 2.0);
     core::Color reflectedColor = trace(reflected, reccursionStep + 1);
-    local = local + clamp(reflectedColor * 0.5);    // todo: reflection factor as paramter
+    local = local + clamp(reflectedColor * 0.3);    // todo: reflection factor as paramter
 
     if (closestObjectMaterial.opacity > 0.0)    //comparing doubles should use some kind of epsilon (std::numeric_limis<double> maybe?)
     {

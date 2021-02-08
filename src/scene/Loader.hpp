@@ -34,6 +34,7 @@ private:
     Json::Value getOrDie(Json::Value node, std::string name);
     core::Point loadPosition(Json::Value& objectNode);
     core::Vector loadRotation(Json::Value& objectNode);
+    core::Vector loadFov(Json::Value& objectNode);
     core::Material loadMaterial(Json::Value& objectNode);
     core::Color loadColor(Json::Value& objectNode, std::string colorName);
 	void loadSphere(Scene& scene, Json::Value& sphereNode);

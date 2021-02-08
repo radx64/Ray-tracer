@@ -35,17 +35,17 @@ void Point::setZ(double z)
     z_ = z;
 }
 
-Point Point::operator + (const Point& p)
+Point Point::operator + (const Point& p) const
 {
     return Point(getX()+p.getX(), getY()+p.getY(),getZ()+p.getZ());
 }
 
-Point Point::operator - (const Point& p)
+Point Point::operator - (const Point& p) const
 {
     return Point(getX()-p.getX(), getY()-p.getY(),getZ()-p.getZ());
 }
 
-double Point::operator * (const Point& p)   /* dot product - must change to method to be similar to vector*/
+double Point::operator * (const Point& p) const  /* dot product - must change to method to be similar to vector*/
 {
     return getX()*p.getX() + getY()*p.getY() + getZ()*p.getZ();
 }
@@ -55,7 +55,7 @@ std::ostream& operator<< (std::ostream& s, Point p)
     return s << "[" << p.getX() << ", " << p.getY() << ", " << p.getZ() << "]";
 }
 
-Point Point::operator*(const double& scale)
+Point Point::operator*(const double& scale) const
 {
     return Point(x_ * scale, y_ * scale, z_ * scale);
 }

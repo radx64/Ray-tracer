@@ -35,14 +35,16 @@ Scene Loader::load(std::string filename)
     Json::Value sceneNode;
     sceneNode = getOrDie(root, "scene");
     scene.setName(sceneNode.get("name", "Name not set").asString());
+    logger_.inf() << "Scene name: "<< scene.getName();
 
     auto cameraNode = getOrDie(sceneNode, "camera");
-
     core::Point camera_position = loadPosition(cameraNode);
     core::Vector camera_rotation = loadRotation(cameraNode);
-    scene.setCamera(rt::core::Camera{camera_position,camera_rotation});
+    core::Vector camera_fov = loadFov(cameraNode);
+    scene.setCamera(rt::core::Camera{camera_position, camera_rotation, camera_fov});
 
-    logger_.inf() << "Scene name: "<< scene.getName();
+    logger_.inf() << "Camera at: "<< camera_position.toString() << " rotation: " << camera_rotation.toString();
+
     Json::Value objectsNode;
     objectsNode = getOrDie(sceneNode, "objects");
 
@@ -98,6 +100,13 @@ core::Vector Loader::loadRotation(Json::Value& objectNode)
     return core::Vector{x, y, z};    
 }
 
+core::Vector Loader::loadFov(Json::Value& objectNode)
+{
+    Json::Value rotation = getOrDie(objectNode, "fov");
+    double x = rotation.get("x", 0.0).asDouble();
+    double y = rotation.get("y", 0.0).asDouble();
+    return core::Vector{x, y, 0.0};    
+}
 
 core::Material Loader::loadMaterial(Json::Value& objectNode)
 {
