@@ -33,12 +33,12 @@ public:
 private:
     Json::Value getOrDie(Json::Value node, std::string name);
     core::Point loadPosition(Json::Value& objectNode);
+    core::Vector loadRotation(Json::Value& objectNode);
     core::Material loadMaterial(Json::Value& objectNode);
     core::Color loadColor(Json::Value& objectNode, std::string colorName);
 	void loadSphere(Scene& scene, Json::Value& sphereNode);
     void loadPlane(Scene& scene, Json::Value& planeNode);
     void loadLight(Scene& scene, Json::Value& lightNode);
-
 
     Logger logger_;
     std::unordered_map<std::string, ObjectType> objectMapping;

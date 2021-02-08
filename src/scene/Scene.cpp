@@ -1,8 +1,6 @@
 #include "Scene.hpp"
 
-namespace rt
-{
-namespace scene
+namespace rt::scene
 {
 
 void Scene::addObject(core::Object::Ptr object)
@@ -19,19 +17,28 @@ void Scene::setName(std::string name)
 {
     name_ = name;
 }
-std::string Scene::getName()
+const std::string& Scene::getName()
 {
     return name_;
 }
 
-std::vector<core::Object::Ptr> Scene::getObjects()
+std::vector<core::Object::Ptr>& Scene::getObjects()
 {
     return objects_;
 }
 
-std::vector<shape::Light::Ptr> Scene::getLights()
+std::vector<shape::Light::Ptr>& Scene::getLights()
 {
     return lights_;
 }
-}  // namespace scene
-}  // namespace rt
+
+void Scene::setCamera(const core::Camera& camera)
+{
+    camera_ = camera;
+}
+const rt::core::Camera& Scene::getCamera()
+{
+    return camera_;
+}
+
+}  // namespace rt::scene

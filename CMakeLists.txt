@@ -22,7 +22,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}
 					src
 					libs/jsoncpp)
 
-add_definitions(-std=c++11 -O3)
+add_definitions(-std=c++17 -O0 -g)
 
 add_subdirectory(src)
 add_subdirectory(libs)
@@ -30,6 +30,10 @@ add_subdirectory(libs)
 add_executable(${projectName} main.cpp)
 
 target_link_libraries(${projectName} png raytracerCore externalLibs)
+
+add_subdirectory(test)
+enable_testing ()
+add_test (NAME TestSuite COMMAND Test)
 
 set(CONFIGURED_ONCE TRUE CACHE INTERNAL
     "A flag showing that CMake has configured at least once.")

@@ -5,6 +5,7 @@
 #include "Loader.hpp"
 
 #include "core/Material.hpp"
+#include "core/Camera.hpp"
 #include "shape/Sphere.hpp"
 #include "shape/Plane.hpp"
 #include "shape/Light.hpp"
@@ -34,6 +35,13 @@ Scene Loader::load(std::string filename)
     Json::Value sceneNode;
     sceneNode = getOrDie(root, "scene");
     scene.setName(sceneNode.get("name", "Name not set").asString());
+
+    auto cameraNode = getOrDie(sceneNode, "camera");
+
+    core::Point camera_position = loadPosition(cameraNode);
+    core::Vector camera_rotation = loadRotation(cameraNode);
+    scene.setCamera(rt::core::Camera{camera_position,camera_rotation});
+
     logger_.inf() << "Scene name: "<< scene.getName();
     Json::Value objectsNode;
     objectsNode = getOrDie(sceneNode, "objects");
@@ -80,6 +88,16 @@ core::Point Loader::loadPosition(Json::Value& objectNode)
     double z = position.get("z", 0.0).asDouble();
     return core::Point{x, y, z};    
 }
+
+core::Vector Loader::loadRotation(Json::Value& objectNode)
+{
+    Json::Value rotation = getOrDie(objectNode, "rotation");
+    double x = rotation.get("x", 0.0).asDouble();
+    double y = rotation.get("y", 0.0).asDouble();
+    double z = rotation.get("z", 0.0).asDouble();
+    return core::Vector{x, y, z};    
+}
+
 
 core::Material Loader::loadMaterial(Json::Value& objectNode)
 {

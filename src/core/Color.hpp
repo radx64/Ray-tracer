@@ -3,9 +3,7 @@
 
 #include <string>
 
-namespace rt
-{
-namespace core
+namespace rt::core
 {
 
 class Color
@@ -25,7 +23,6 @@ public:
 
 };
 
-}  // namesapce core
-}  // namespace rt
+}  // namespace rt::core
 
 #endif  // RT_CORE_COLOR_HPP_

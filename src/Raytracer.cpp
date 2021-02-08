@@ -3,7 +3,6 @@
 #include <cmath>
 #include <iostream>
 
-
 namespace rt
 {
 
@@ -42,14 +41,14 @@ void Raytracer::run()
     double hd;
     double wd;
 
-    for(int height=-IMG_SIDE/2; height < IMG_SIDE/2; height++)
+    for(int height=-IMG_HEIGHT/2; height < IMG_HEIGHT/2; height++)
     {
-        for(int width =- IMG_SIDE/2; width<IMG_SIDE/2; width++)
+        for(int width =- IMG_WIDTH/2; width<IMG_WIDTH/2; width++)
         {
             core::Point orgin(width, height, 0.0);
 
-            hd = (float)height/(IMG_SIDE); 
-            wd = (float)width/(IMG_SIDE);
+            hd = (float)height/(IMG_HEIGHT); 
+            wd = (float)width/(IMG_WIDTH);
 
             core::Vector direction((wd)*tan(fovx/2), (hd)*tan(fovy/2), 1.0);
             direction.normalize();
@@ -58,17 +57,9 @@ void Raytracer::run()
 
             core::Color c = trace(viewRay, 0);
 
-            buffer_[width+IMG_SIDE/2][height+IMG_SIDE/2] = clamp(c);
+            buffer_[width+IMG_WIDTH/2][height+IMG_HEIGHT/2] = clamp(c);
         }
-    }
-
-    for(int height=-IMG_SIDE/2; height < IMG_SIDE/2; height++)
-    {
-        for(int width =- IMG_SIDE/2; width<IMG_SIDE/2; width++)
-        {
-            core::Color c = buffer_[width+IMG_SIDE/2][height+IMG_SIDE/2];
-            buffer_[width+IMG_SIDE/2][height+IMG_SIDE/2] = c;
-        }
+        std::cout << "Render progress: " << (height + IMG_HEIGHT/2)*100.0 / IMG_HEIGHT << "%" << "\r";     
     }
 }
 
@@ -86,23 +77,15 @@ core::Color Raytracer::trace(core::Ray& ray, int reccursionStep)
 
     for(auto& object : objects)
     {
-
-        if(object->hit(ray, distance))
-        {
-            closestObject = object;
-        }
-
+        if(object->hit(ray, distance)) closestObject = object;
     };
 
-    if (closestObject == nullptr)
-    {
-        return core::Color{30.0, 30.0, 30.0};
-    }
+    if (closestObject == nullptr) return core::Color{30.0, 30.0, 30.0};
 
     core::Point collision = ray.getOrgin() + ray.getDirection() * distance;
     core::Vector normal = closestObject->getNormalAt(collision);
 
-    core::Material closesObjectMaterial = closestObject->getMaterial();
+    core::Material closestObjectMaterial = closestObject->getMaterial();
 
     auto lights = scene_.getLights();
     for(auto& light : lights)
@@ -154,13 +137,13 @@ core::Color Raytracer::trace(core::Ray& ray, int reccursionStep)
 
         if (isInShadow)
         {
-            local = local + clamp(closesObjectMaterial.ambient * lightning_factor);
+            local = local + clamp(closestObjectMaterial.ambient * lightning_factor);
         }
         else
         {
-            core::Color ambient = closesObjectMaterial.ambient * lightning_factor;
-            core::Color diffuse = closesObjectMaterial.diffuse * light->getColor()  * dotNL * lightning_factor * 10.0;
-            core::Color specular = closesObjectMaterial.specular * light->getColor() * pow(dotVR, 40) * 0.95;
+            core::Color ambient = closestObjectMaterial.ambient * lightning_factor;
+            core::Color diffuse = closestObjectMaterial.diffuse * light->getColor()  * dotNL * lightning_factor * 10.0;
+            core::Color specular = closestObjectMaterial.specular * light->getColor() * pow(dotVR, 40) * 0.95;
         
             local = local + clamp(ambient) + clamp(diffuse) + clamp(specular);
         }
@@ -170,7 +153,7 @@ core::Color Raytracer::trace(core::Ray& ray, int reccursionStep)
     core::Color reflectedColor = trace(reflected, reccursionStep + 1);
     local = local + clamp(reflectedColor * 0.5);    // todo: reflection factor as paramter
 
-    if (closesObjectMaterial.opacity > 0.0)    //comparing doubles should use some kind of epsilon (std::numeric_limis<double> maybe?)
+    if (closestObjectMaterial.opacity > 0.0)    //comparing doubles should use some kind of epsilon (std::numeric_limis<double> maybe?)
     {
         double n1;
         double n2;
@@ -178,13 +161,13 @@ core::Color Raytracer::trace(core::Ray& ray, int reccursionStep)
 
         if (cosI > 0)
         {
-            n1 = closesObjectMaterial.refractionIndex;
+            n1 = closestObjectMaterial.refractionIndex;
             n2 = 1.0f;
         }
         else
         {
             n1 = 1.0f;  
-            n2 = closesObjectMaterial.refractionIndex;
+            n2 = closestObjectMaterial.refractionIndex;
             cosI = -cosI;
         }
 
@@ -198,7 +181,7 @@ core::Color Raytracer::trace(core::Ray& ray, int reccursionStep)
                 ray.getDirection() * (n1/n2) + normal * ((n1/n2) * cosI - cosT));
 
             core::Color refractionColor = trace(refraction, reccursionStep + 1);
-            local = local + clamp(refractionColor * closesObjectMaterial.opacity);
+            local = local + clamp(refractionColor * closestObjectMaterial.opacity);
 
         }
         else
@@ -207,13 +190,10 @@ core::Color Raytracer::trace(core::Ray& ray, int reccursionStep)
                 ray.getDirection() * (n1/n2) + normal * ((n1/n2) * cosI - cosT));
 
             core::Color refractionColor = trace(refraction, reccursionStep + 1);
-            local = local + clamp(refractionColor * closesObjectMaterial.opacity);
+            local = local + clamp(refractionColor * closestObjectMaterial.opacity);
 
         }
-        
     }
-
-
     return local;
 }
 

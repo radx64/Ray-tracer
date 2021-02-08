@@ -1,1 +1,1 @@
-#define VERSION "0.1.1.0"
+constexpr char VERSION[]  = "0.1.1.1";

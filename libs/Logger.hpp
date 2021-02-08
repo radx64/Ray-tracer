@@ -11,13 +11,8 @@
 class Flusher
 {
 public:
-    Flusher(std::string prefix) : prefix_{prefix}
-    {
-        shouldFlush_ = true;
-        time_ = getTime();
-    }
-
-    Flusher(Flusher&& f){}
+    Flusher(const std::string prefix);
+    Flusher(Flusher&& f);
 
     template <typename T>
     Flusher& operator<< (const T& element)
@@ -26,36 +21,16 @@ public:
         return *this;
     }
 
-    ~Flusher()
-    {
-        if(!shouldFlush_) return;
-        using namespace terminal;
-        std::cout << time_ << " - [" << prefix_ <<"] "<< buffer_.str() << Color(FG_DEFAULT)<< std::endl;
-    }
+    ~Flusher();
 
 protected:
-    Flusher()
-    {
-        shouldFlush_ = false;
-    }
+    Flusher();
 
 private:
-    std::string getTime()
-    {
-        using namespace terminal;
-        std::stringstream ss;
-        std::time_t t = time(0);
-        std::tm* localtime = std::localtime(&t);
+    std::string getTime() const;
 
-        ss  << std::setw(2) << std::setfill('0') << localtime->tm_hour 
-            << ":" << std::setw(2) << std::setfill('0') << localtime->tm_min 
-            << ":" << std::setw(2) << std::setfill('0') << localtime->tm_sec;
-
-        return ss.str();
-    }
-
-    std::string prefix_;
-    std::string time_;
+    const std::string prefix_;
+    const std::string time_;
     std::stringstream buffer_;
     bool shouldFlush_;
 };
@@ -64,15 +39,9 @@ class DisabledFlusher : public Flusher
 {
 public:
     DisabledFlusher() : Flusher()
-    {
+    {}
 
-    }
-
-    ~DisabledFlusher()
-    {
-
-    }
-
+    ~DisabledFlusher() = default;
 };
 
 enum LogLevel
@@ -86,7 +55,7 @@ enum LogLevel
 class Logger
 {
 public:
-    Logger(std::string prefix) : prefix_{prefix}
+    Logger(const std::string prefix) : prefix_{prefix}
     {
 
     }
@@ -129,7 +98,7 @@ public:
     }
 
 private:
-    std::string prefix_;
+    const std::string prefix_;
     static LogLevel level_;
 
 };

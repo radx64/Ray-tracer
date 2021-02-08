@@ -13,7 +13,9 @@ namespace rt
 {
 
 // whole dynamic image scaling will be implemented. This one below is only for testing purposes.
-#define IMG_SIDE 700
+#define IMG_WIDTH 1280
+#define IMG_HEIGHT 1024
+
 
 class Raytracer
 {
@@ -21,10 +23,10 @@ public:
     using Image = std::vector<std::vector<core::Color>>;
     Raytracer() : logger_("Raytracer")
     {
-        buffer_.resize(IMG_SIDE);
-        for(int i=0; i<IMG_SIDE; ++i)
+        buffer_.resize(IMG_WIDTH);
+        for(int i=0; i<IMG_WIDTH; ++i)
         {
-            buffer_[i].resize(IMG_SIDE);
+            buffer_[i].resize(IMG_HEIGHT);
         }
     }
 

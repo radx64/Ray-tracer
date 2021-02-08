@@ -12,8 +12,6 @@
 #include "scene/Scene.hpp"
 #include "shape/Sphere.hpp"
 
-
-void guiInterface(int argc, char** argv);
 void textInterface();
 
 Logger logger("Main");
@@ -22,23 +20,9 @@ int main(int argc, char** argv)
 {
     logger.setLevel(LogLevel::DBG);
     printIntro();
-    logger.inf() << "Params given: " << argc <<" to executable: "<< argv[0];
-    if (argc > 1)
-    {
-        logger.inf() << "Starting graphical interface using OpenGL...";
-        guiInterface(argc, argv);
-    }
-    else
-    {
-        logger.inf() << "Starting text interface...";
-        textInterface();
-    }
+    logger.inf() << argc << "params passed to executable: "<< argv[0];
+    textInterface();
     return 0;
-}
-
-void guiInterface(int argc, char** argv)
-{
-    logger.err() << "NOT IMPLEMENTED YET!. USE TEXT INTERFACE.";
 }
 
 void textInterface()
@@ -56,7 +40,7 @@ void textInterface()
         rt::Raytracer::Image image;
         image = raytracer.getImage();
 
-        png::image<png::rgb_pixel> pngImage(IMG_SIDE, IMG_SIDE);
+        png::image<png::rgb_pixel> pngImage(IMG_WIDTH, IMG_HEIGHT);
         for (size_t y = 0; y < pngImage.get_height(); ++y)
         {
             for (size_t x = 0; x < pngImage.get_width(); ++x)

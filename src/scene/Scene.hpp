@@ -6,10 +6,9 @@
 
 #include "core/Object.hpp"
 #include "shape/Light.hpp"
+#include "core/Camera.hpp"
 
-namespace rt
-{
-namespace scene
+namespace rt::scene
 {
 
 class Scene
@@ -21,17 +20,19 @@ public:
     void addLight(shape::Light::Ptr light);
 
     void setName(std::string name);
-    std::string getName();
-    std::vector<core::Object::Ptr> getObjects();
-    std::vector<shape::Light::Ptr> getLights();
+    const std::string& getName();
+    std::vector<core::Object::Ptr>& getObjects();
+    std::vector<shape::Light::Ptr>& getLights();
+    void setCamera(const core::Camera& camera);
+    const core::Camera& getCamera();
 
 private:
     std::vector<core::Object::Ptr> objects_;
     std::vector<shape::Light::Ptr> lights_;
+    core::Camera camera_;
     std::string name_;
 };
 
-}  // namespace scene
-}  // namespace rt
+}  // namespace rt::scene
 
 #endif  // RT_SCENE_SCENE_HPP_
