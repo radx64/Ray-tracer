@@ -4,6 +4,9 @@ namespace rt
 {
 namespace core
 {
+    Color::Color(const double r, const double g, const double b)
+    : red(r), green(g), blue(b)
+    {}
 
     Color Color::operator + (const Color& c)
     {

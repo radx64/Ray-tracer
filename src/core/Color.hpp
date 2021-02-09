@@ -13,6 +13,9 @@ public:
     double green;
     double blue;
 
+    Color() = default;
+    Color(const double r, const double g, const double b);
+    
     std::string toString();
 
     Color operator + (const Color& c);
