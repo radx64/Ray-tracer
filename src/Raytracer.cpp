@@ -76,7 +76,7 @@ core::Color Raytracer::trace(core::Ray& ray, int reccursionStep)
 
     if (reccursionStep > maxReccursionLimit) return local;
 
-    double distance = 10000.0f;
+    double distance = 1000000.0f;
 
     auto objects = scene_.getObjects();
 
@@ -106,7 +106,7 @@ core::Color Raytracer::trace(core::Ray& ray, int reccursionStep)
 
         // PHONG lighting model
         double a = 1.0;
-        double b = 0.1;
+        double b = 0.01;
         double c = 0.001;
 
         core::Vector V = ray.getDirection();    // observation vector
@@ -125,7 +125,7 @@ core::Color Raytracer::trace(core::Ray& ray, int reccursionStep)
         {
             if(object->isCastingShadow && object->hit(lightRay, t2))
             {
-                //isInShadow = true;
+                isInShadow = true;
                 break;
             }
         };
@@ -151,7 +151,7 @@ core::Color Raytracer::trace(core::Ray& ray, int reccursionStep)
         if (isInShadow)
         {
             local = local + clamp(closestObjectMaterial.ambient * lightning_factor);
-            local = core::Color{255.0,0.0,255.0};
+            //local = core::Color{255.0,0.0,255.0};
         }
         else
         {

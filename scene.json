@@ -14,12 +14,12 @@
                 "type" : "sphere",
                 "config" :  
                 {
-                    "position" : {"x" : -90.0, "y" : 0.0, "z" : 200.0},
+                    "position" : {"x" : -120.0, "y" : 0.0, "z" : 200.0},
                     "material" :
                     {
                         "ambient" :  {"r" : 0, "g" : 0,  "b" : 10},
                         "specular" : {"r" : 10,"g" : 10, "b" : 10},
-                        "diffuse" :  {"r" : 0, "g" : 0,  "b" : 127}
+                        "diffuse" :  {"r" : 0, "g" : 50,  "b" : 127}
                     },
                     "radius" : 90
                 }
@@ -33,7 +33,7 @@
                     {
                         "ambient" :  {"r" : 10,  "g" : 0,  "b" : 0},
                         "specular" : {"r" : 10,  "g" : 10, "b" : 10},
-                        "diffuse" :  {"r" : 127, "g" : 0,  "b" : 0}
+                        "diffuse" :  {"r" : 127, "g" : 50,  "b" : 0}
                     },
                     "radius" : 90
                 }
@@ -42,12 +42,12 @@
                 "type" : "sphere",
                 "config" : 
                 {
-                    "position" : {"x" : 90.0, "y" : 0.0, "z" : 200.0},
+                    "position" : {"x" : 120.0, "y" : 0.0, "z" : 200.0},
                     "material" :
                     {
                         "ambient" : {"r" : 0,  "g" : 10,  "b" : 0},
                         "specular" :{"r" : 10, "g" : 10,  "b" : 10},
-                        "diffuse" : {"r" : 0,  "g" : 127, "b" : 0}
+                        "diffuse" : {"r" : 0,  "g" : 127, "b" : 50}
                     },
                     "radius" : 90
                 }
@@ -121,7 +121,7 @@
                 "type" : "light",
                 "config" : 
                 {
-                    "position" : { "x" : 1000.0, "y" : 300.0, "z" : -500.0},
+                    "position" : { "x" : 1000.0, "y" : 500.0, "z" : -500.0},
                     "color" : {"r" : 50, "g" : 50, "b" : 50}
                 }
             },
@@ -129,7 +129,7 @@
                 "type" : "light",
                 "config" : 
                 {
-                    "position" : { "x" : -1500.0, "y" : 300.0, "z" : -500.0},
+                    "position" : { "x" : -1000.0, "y" : 500.0, "z" : -500.0},
                     "color" : {"r" : 50, "g" : 50, "b" : 50}
                 }
             }                        

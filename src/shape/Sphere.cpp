@@ -33,24 +33,23 @@ bool Sphere::hit(core::Ray r, double& t)
     double c = (dist.dotProduct(dist)) - (getRadius() * getRadius());
     double d = b*b - c;
     if (d <= 0.0) return false;
-    d = sqrtf(d);
+
+    d = sqrt(d);
 
     double t1 = - b - d;
-    
+    double t2 = - b + d;
+
     if ((t1 > 0.005f) && (t1 < t))
     {
         t = t1;
         return true;
     }
 
-    double t2 = - b + d;
-
     if ((t2 > 0.005f) && (t2 < t))
     {
         t = t2;
         return true;
     }
-
     return false;
 }
 

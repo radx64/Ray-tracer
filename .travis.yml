@@ -18,5 +18,5 @@ before_install:
   - export CXX="g++-4.8" CC="gcc-4.8";
 
 script: 
-  - ./compile.sh
+  - ./compileAndTest.sh
   - ./build/Raytracer
