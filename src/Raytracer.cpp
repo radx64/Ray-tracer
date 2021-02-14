@@ -1,7 +1,11 @@
 #include "Raytracer.hpp"
 
+#include <algorithm>
 #include <cmath>
 #include <iostream>
+#include <functional>
+#include <thread>
+#include <chrono>
 
 constexpr bool REFRACTIONS_ENABLED = true; 
 constexpr bool DEPTHMAP_ENABLED = false;
@@ -10,8 +14,33 @@ constexpr bool SHADOWS_DEBUG = false;
 constexpr double MAX_DEPTH = 100000.0;
 constexpr int maxReccursionLimit = 3;
 
+constexpr bool MULTITHREAD_MODE = true;
+constexpr int IMG_WIDTH  = 640;
+constexpr int IMG_HEIGHT = 480;
+
 namespace rt
 {
+
+struct ThreadInfo
+{
+    unsigned int index;
+    unsigned int progress;
+    unsigned int finished;
+};
+
+std::tuple<const unsigned int, const unsigned int> Raytracer::getImageSize()
+{
+    return std::tuple(IMG_HEIGHT, IMG_WIDTH);
+}
+
+Raytracer::Raytracer() : logger_("Raytracer")
+{
+    buffer_.resize(IMG_WIDTH);
+    for(int i=0; i<IMG_WIDTH; ++i)
+    {
+        buffer_[i].resize(IMG_HEIGHT);
+    }
+}
 
 core::Color clamp(core::Color c)
 {
@@ -45,17 +74,72 @@ void Raytracer::load(scene::Scene& s)
     scene_ = s;
 }
 
+void print_threads_progress(std::vector<rt::ThreadInfo>* thread_info)
+{
+    for (const auto& thread: *thread_info)
+    {
+        std::cout << "[" << thread.index << "] " << thread.progress << "%    ";
+    }
+    std::cout << "\r";
+    std::flush(std::cout);
+}
+
+void Raytracer::progress_check(std::vector<rt::ThreadInfo>* thread_info)
+{
+
+    while(std::any_of(thread_info->begin(), thread_info->end(), [](const auto ti){return ti.finished == false;}))
+    {
+        print_threads_progress(thread_info);
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    };
+    print_threads_progress(thread_info);
+    std::cout << std::endl;
+    return;
+}
+
 void Raytracer::run()
 {
-    const auto camera_fov = scene_.getCamera().fov_;
+    unsigned int threads_count{1};
 
+    if (MULTITHREAD_MODE)
+    {
+        threads_count = std::thread::hardware_concurrency();
+        logger_.dbg() << "Hardware supports " << threads_count << " threads";
+        logger_.dbg() << "Resolution " << IMG_WIDTH << "x" << IMG_HEIGHT;
+        logger_.dbg() << "Single thread should render " << IMG_WIDTH << "x" << IMG_HEIGHT / threads_count;
+    }
+
+    std::vector<std::thread> thread_pool;
+    std::vector<rt::ThreadInfo> thread_info;
+    thread_info.reserve(threads_count);
+
+    for (unsigned int t_id=0; t_id < threads_count; ++t_id)
+    {
+        logger_.dbg() << "Spawning thread " << t_id;
+        unsigned int strip_size = IMG_HEIGHT / threads_count;
+        int strip_y1 = -IMG_HEIGHT/2 + t_id * strip_size;
+        int strip_y2 = -IMG_HEIGHT/2 + t_id * strip_size + strip_size;
+        
+        thread_info.emplace_back(rt::ThreadInfo{t_id, 0, false});      
+        thread_pool.emplace_back(std::thread(&Raytracer::render, this, strip_y1, strip_y2, &thread_info[t_id]));
+    }
+
+    std::thread progress_thread (&Raytracer::progress_check, this, &thread_info);
+
+    for(auto& thread : thread_pool)
+    {
+        thread.join();
+    }
+    progress_thread.join();
+}
+
+void Raytracer::render(const int min_y, const int max_y, rt::ThreadInfo* thread_info)
+{
+    const auto camera_fov = scene_.getCamera().fov_;
     double fovx = camera_fov.getX()*(M_PI/180.0);
     double fovy = camera_fov.getY()*(M_PI/180.0);
 
-    double hd;
-    double wd;
-
-    for(int height=-IMG_HEIGHT/2; height < IMG_HEIGHT/2; height++)
+    for(int height=min_y; height < max_y; height++)
     {
         for(int width =- IMG_WIDTH/2; width<IMG_WIDTH/2; width++)
         {
@@ -66,8 +150,8 @@ void Raytracer::run()
                 camera_position.getY() + height, 
                 camera_position.getZ() + 0.0);
 
-            hd = (float)height/(IMG_HEIGHT); 
-            wd = (float)width/(IMG_WIDTH);
+            double hd = (float)height/(IMG_HEIGHT); 
+            double wd = (float)width/(IMG_WIDTH);
 
             core::Vector direction((wd)*tan(fovx/2), (hd)*tan(fovy/2), 1.0);
             direction.normalize();
@@ -78,8 +162,9 @@ void Raytracer::run()
 
             buffer_[width+IMG_WIDTH/2][height+IMG_HEIGHT/2] = clamp(c);
         }
-        std::cout << "Render progress: " << (height + IMG_HEIGHT/2)*100 / IMG_HEIGHT << "%" << "\r";     
+        thread_info->progress = (height - min_y) * 100 / (max_y - min_y);     
     }
+    thread_info->finished = true;
 }
 
 core::Color Raytracer::trace(core::Ray& ray, int reccursionStep)
@@ -175,7 +260,7 @@ core::Color Raytracer::trace(core::Ray& ray, int reccursionStep)
                 casting_shadow_opacity_factor = castingShadowObject->getMaterial().opacity;
             }
 
-            if(SHADOWS_DEBUG) local = core::Color{255.0,0.0,255.0};
+            if(SHADOWS_DEBUG && isInShadow) local = core::Color{255.0,0.0,255.0};
             else
             {
                 core::Color ambient = closestObjectMaterial.ambient * lightning_factor * casting_shadow_opacity_factor;

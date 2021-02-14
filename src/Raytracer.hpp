@@ -1,6 +1,7 @@
 #ifndef RT_RAYTRACER
 #define RT_RAYTRACER
 
+#include <tuple>
 #include <vector>
 
 #include <libs/Logger.hpp>
@@ -11,29 +12,24 @@
 namespace rt
 {
 
-// whole dynamic image scaling will be implemented. This one below is only for testing purposes.
-#define IMG_WIDTH 800
-#define IMG_HEIGHT 600
+struct ThreadInfo;
 
 class Raytracer
 {
 public:
     using Image = std::vector<std::vector<core::Color>>;
-    Raytracer() : logger_("Raytracer")
-    {
-        buffer_.resize(IMG_WIDTH);
-        for(int i=0; i<IMG_WIDTH; ++i)
-        {
-            buffer_[i].resize(IMG_HEIGHT);
-        }
-    }
+    Raytracer();
 
     void load(scene::Scene& s);
     void run();
     Image getImage();
+    std::tuple<const unsigned int, const unsigned int> getImageSize();
 
 private:
+    void render(const int min_y, const int max_y, rt::ThreadInfo* thread_info);
     core::Color trace(core::Ray& ray, int reccursionStep);
+    void progress_check(std::vector<rt::ThreadInfo>* thread_info);
+
     Image buffer_;
     scene::Scene scene_;
 

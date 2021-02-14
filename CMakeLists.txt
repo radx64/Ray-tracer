@@ -6,7 +6,7 @@ enable_testing()
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
     "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    #set(warnings "-Wall -Wextra -Werror")
+    set(warnings "-Wall -Wextra -Werror")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     set(warnings "/W4 /WX /EHsc")
 endif()
@@ -22,14 +22,14 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}
 					src
 					libs/jsoncpp)
 
-add_definitions(-std=c++17 -O0 -g)
+add_definitions(-std=c++17)
 
 add_subdirectory(src)
 add_subdirectory(libs)
 
 add_executable(${projectName} main.cpp)
 
-target_link_libraries(${projectName} png raytracerCore externalLibs)
+target_link_libraries(${projectName} png raytracerCore externalLibs pthread)
 
 add_subdirectory(test)
 enable_testing ()

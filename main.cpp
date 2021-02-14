@@ -1,3 +1,4 @@
+#include <chrono>
 #include <iostream>
 #include <algorithm>
 #include <stdint.h>
@@ -35,12 +36,18 @@ void textInterface()
         rt::Raytracer raytracer;
         logger.inf() << "Raytracer created";
         raytracer.load(s);
+
+        auto start = std::chrono::system_clock::now();
         raytracer.run();
+        auto end = std::chrono::system_clock::now();
+        std::chrono::duration<double> diff = end-start;
+        logger.inf() << "Took " << std::setw(4) << diff.count() << " [s] to render";
         logger.inf() << "Raytracer finished";       
         rt::Raytracer::Image image;
         image = raytracer.getImage();
 
-        png::image<png::rgb_pixel> pngImage(IMG_WIDTH, IMG_HEIGHT);
+        const auto image_size = raytracer.getImageSize();
+        png::image<png::rgb_pixel> pngImage(std::get<1>(image_size), std::get<0>(image_size));
         for (size_t y = 0; y < pngImage.get_height(); ++y)
         {
             for (size_t x = 0; x < pngImage.get_width(); ++x)
