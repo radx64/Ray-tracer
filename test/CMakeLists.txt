@@ -12,3 +12,4 @@ add_subdirectory(gtest)
 
 add_executable(Test  main.cpp ${TESTS_SRC} ${SRC})
 target_link_libraries (Test -pthread gtest raytracerCore)
+add_test (NAME TestSuite COMMAND Test)

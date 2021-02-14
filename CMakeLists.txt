@@ -31,9 +31,8 @@ add_executable(${projectName} main.cpp)
 
 target_link_libraries(${projectName} png raytracerCore externalLibs pthread)
 
-add_subdirectory(test)
 enable_testing ()
-add_test (NAME TestSuite COMMAND Test)
+add_subdirectory(test)
 
 set(CONFIGURED_ONCE TRUE CACHE INTERNAL
     "A flag showing that CMake has configured at least once.")
