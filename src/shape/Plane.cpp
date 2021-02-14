@@ -7,9 +7,9 @@ namespace rt
 namespace shape
 {
 
-core::Vector Plane::getNormalAt(core::Point& p)
+core::Vector Plane::getNormalAt([[maybe_unused]] core::Point& p)
 {
-    core::Vector normal (getPosition());
+    core::Vector normal(getPosition());
     normal.normalize();
     return normal;
 }
@@ -33,7 +33,7 @@ bool Plane::hit(core::Ray r, double& t)
     return false;
 }
 
-const core::Vector Plane::UV(const core::Point& p)
+const core::Vector Plane::UV([[maybe_unused]] const core::Point& p)
 {
     return core::Vector{0.0, 0.0, 0.0};
 }

@@ -6,8 +6,6 @@ Flusher::Flusher(const std::string prefix)
     shouldFlush_ = true;
 }
 
-Flusher::Flusher(Flusher&& f){}
-
 Flusher::Flusher()
 {
     shouldFlush_ = false;

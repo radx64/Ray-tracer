@@ -19,12 +19,12 @@ core::Color Light::getColor()
     return color_;
 }
 
-core::Vector Light::getNormalAt(core::Point& p)
+core::Vector Light::getNormalAt([[maybe_unused]] core::Point& p)
 {
 	return core::Vector(0.0,0.0,0.0);
 }
 
-bool Light::hit(core::Ray r, double& dist)
+bool Light::hit([[maybe_unused]] core::Ray r, [[maybe_unused]] double& dist)
 {
 	return false;
 }

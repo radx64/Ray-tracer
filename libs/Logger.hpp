@@ -12,7 +12,7 @@ class Flusher
 {
 public:
     Flusher(const std::string prefix);
-    Flusher(Flusher&& f);
+    Flusher(Flusher&& f) = default;
 
     template <typename T>
     Flusher& operator<< (const T& element)

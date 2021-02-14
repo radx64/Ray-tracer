@@ -20,6 +20,8 @@ public:
     Vector(const Vector& v) : Point(v.x_,v.y_,v.z_)
     { };
 
+    Vector& operator=(const Vector& v) = default;
+
     Vector crossProduct(const Vector& v);
     double dotProduct(const Vector& v);
     double length() const;
