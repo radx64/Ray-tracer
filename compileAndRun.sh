@@ -2,4 +2,5 @@
 mkdir build
 cd build
 cmake -G "Unix Makefiles" ..
-make && ./Raytracer
+cmake --build . --config Release --target all
+./Raytracer
