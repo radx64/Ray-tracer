@@ -29,6 +29,15 @@ bool Light::hit([[maybe_unused]] core::Ray r, [[maybe_unused]] double& dist)
 	return false;
 }
 
+core::Vector Light::UV([[maybe_unused]] const core::Point& p)
+{
+    return core::Vector{0.0, 0.0, 0.0};
+}
+
+const core::Material& Light::getMaterialAt([[maybe_unused]] const core::Point& p)
+{
+    return getMaterial();
+}
 
 }  // namespace shape
 }  // namespace rt

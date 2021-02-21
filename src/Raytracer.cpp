@@ -136,8 +136,8 @@ void Raytracer::run()
 void Raytracer::render(const int min_y, const int max_y, rt::ThreadInfo* thread_info)
 {
     const auto camera_fov = scene_.getCamera().fov_;
-    double fovx = camera_fov.getX()*(M_PI/180.0);
-    double fovy = camera_fov.getY()*(M_PI/180.0);
+    double fovx = camera_fov.x()*(M_PI/180.0);
+    double fovy = camera_fov.y()*(M_PI/180.0);
 
     for(int height=min_y; height < max_y; height++)
     {
@@ -146,9 +146,9 @@ void Raytracer::render(const int min_y, const int max_y, rt::ThreadInfo* thread_
             const auto camera_position = scene_.getCamera().position_;
 
             core::Point origin(
-                camera_position.getX() + width,
-                camera_position.getY() + height, 
-                camera_position.getZ() + 0.0);
+                camera_position.x() + width,
+                camera_position.y() + height, 
+                camera_position.z() + 0.0);
 
             double hd = (float)height/(IMG_HEIGHT); 
             double wd = (float)width/(IMG_WIDTH);
@@ -192,7 +192,7 @@ core::Color Raytracer::trace(core::Ray& ray, int reccursionStep)
     {
         if (closestObject == nullptr) return core::Color{30.0, 30.0, 30.0};
 
-        core::Point collision = ray.getOrgin() + ray.getDirection() * distance;
+        core::Point collision = ray.getOrigin() + ray.getDirection() * distance;
         core::Vector normal = closestObject->getNormalAt(collision);
 
         core::Material closestObjectMaterial = closestObject->getMaterialAt(collision);
@@ -200,7 +200,7 @@ core::Color Raytracer::trace(core::Ray& ray, int reccursionStep)
 
         // checkered pattern fo UV map testing
         bool checkered = false;
-        float sines = cos(M_PI*40 * closestObjectUV.getX()) * cos(M_PI*40.0 * closestObjectUV.getY());
+        float sines = cos(M_PI*40 * closestObjectUV.x()) * cos(M_PI*40.0 * closestObjectUV.y());
         if (sines < 0) checkered = true;
         auto lights = scene_.getLights();
         for(auto& light : lights)
@@ -248,9 +248,9 @@ core::Color Raytracer::trace(core::Ray& ray, int reccursionStep)
             core::Vector difference = light->getPosition() - collision;
 
             double di = sqrtf(
-                difference.getX() * difference.getX() +
-                difference.getY() * difference.getY() + 
-                difference.getZ() * difference.getZ());
+                difference.x() * difference.x() +
+                difference.y() * difference.y() + 
+                difference.z() * difference.z());
 
             double lightning_factor = 1.0 / (a + b*di + c*di*di);
 

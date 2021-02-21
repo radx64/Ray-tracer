@@ -1,58 +1,56 @@
 #include "Point.hpp"
 
-namespace rt
-{
-namespace core
+namespace rt::core
 {
 
-double Point::getX() const
+double Point::x() const
 {
     return x_;
 }
 
-double Point::getY() const
+double Point::y() const
 {
     return y_;
 }
 
-double Point::getZ() const
+double Point::z() const
 {
     return z_;
 }
 
-void Point::setX(double x)
+void Point::x(double x)
 {
     x_ = x;
 }
 
-void Point::setY(double y)
+void Point::y(double y)
 {
     y_ = y;
 }
 
-void Point::setZ(double z)
+void Point::z(double z)
 {
     z_ = z;
 }
 
 Point Point::operator + (const Point& p) const
 {
-    return Point(getX()+p.getX(), getY()+p.getY(),getZ()+p.getZ());
+    return Point(x()+p.x(), y()+p.y(),z()+p.z());
 }
 
 Point Point::operator - (const Point& p) const
 {
-    return Point(getX()-p.getX(), getY()-p.getY(),getZ()-p.getZ());
+    return Point(x()-p.x(), y()-p.y(),z()-p.z());
 }
 
-double Point::operator * (const Point& p) const  /* dot product - must change to method to be similar to vector*/
+double Point::dot(const Point& p) const  /* dot product - must change to method to be similar to vector*/
 {
-    return getX()*p.getX() + getY()*p.getY() + getZ()*p.getZ();
+    return x()*p.x() + y()*p.y() + z()*p.z();
 }
 
 std::ostream& operator<< (std::ostream& s, Point p)
 {
-    return s << "[" << p.getX() << ", " << p.getY() << ", " << p.getZ() << "]";
+    return s << p.toString();
 }
 
 Point Point::operator*(const double& scale) const
@@ -63,10 +61,14 @@ Point Point::operator*(const double& scale) const
 std::string Point::toString() const
 {
     return std::string("["
-        + std::to_string(x_) + ","
-        + std::to_string(y_) + ","
+        + std::to_string(x_) + ", "
+        + std::to_string(y_) + ", "
         + std::to_string(z_) + "]");
 }
 
-}  // namespace core
-}  // namespace rt 
+bool Point::operator== (const Point& p) const
+{
+    return ((x()==p.x()) and (y()==p.y()) and z()==p.z());
+}
+
+}  // namespace rt::core

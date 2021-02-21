@@ -1,18 +1,22 @@
 #include "Ray.hpp"
 
-namespace rt
-{
-namespace core
+namespace rt::core
 {
 
-Point Ray::getOrgin()
+Ray::Ray(const Point& o, const Vector& dir)
+: origin_(o), direction_(dir)
 {
-    return orgin_;
 
 }
-void Ray::setOrgin(const Point& p)
+
+Point Ray::getOrigin()
 {
-    orgin_ = p;
+    return origin_;
+
+}
+void Ray::setOrigin(const Point& p)
+{
+    origin_ = p;
 }
 Vector Ray::getDirection()
 {
@@ -24,19 +28,15 @@ void Ray::setDirection(const Vector& v)
 }
 std::string Ray::toString() const
 {
-    return std::string("ORGIN: ["
-        + std::to_string(orgin_.getX()) + ","
-        + std::to_string(orgin_.getY()) + ","
-        + std::to_string(orgin_.getZ()) + "]"
-        + "DIR: ["
-        + std::to_string(direction_.getX()) + ","
-        + std::to_string(direction_.getY()) + ","
-        + std::to_string(direction_.getZ()) + "]"
-
-
-
+    return std::string("ORIGIN: ["
+        + std::to_string(origin_.x()) + ", "
+        + std::to_string(origin_.y()) + ", "
+        + std::to_string(origin_.z()) + "]"
+        + " DIR: ["
+        + std::to_string(direction_.x()) + ", "
+        + std::to_string(direction_.y()) + ", "
+        + std::to_string(direction_.z()) + "]"
         );
 }
 
-}  // namespace core
-}  // namespace rt
+}  // namespace rt::core

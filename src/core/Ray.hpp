@@ -12,18 +12,16 @@ namespace core
 class Ray
 {
 public:
-    explicit Ray(const Point& o, const Vector& dir) : 
-    orgin_(o), direction_(dir)
-    { }
+    Ray(const Point& o, const Vector& dir);
 
-    Point getOrgin();
-    void setOrgin(const Point& p);
+    Point getOrigin();
+    void setOrigin(const Point& p);
     Vector getDirection();
     void setDirection(const Vector& v);
     std::string toString() const;
 
 private:
-    Point orgin_;
+    Point origin_;
     Vector direction_;
 };
 

@@ -23,11 +23,13 @@ public:
 
     core::Vector getNormalAt(core::Point& p) override;
     bool hit(core::Ray r, double& dist) override;
+    core::Vector UV([[maybe_unused]] const core::Point& p) override;
 
     void setColor(core::Color color);
     core::Color getColor();
 
 private:
+    const core::Material& getMaterialAt([[maybe_unused]] const core::Point& p) override;
     Logger logger_;
     core::Color color_;
 };

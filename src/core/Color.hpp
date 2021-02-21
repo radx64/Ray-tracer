@@ -18,11 +18,13 @@ public:
     
     std::string toString();
 
-    Color operator + (const Color& c);
-    Color operator + (const double& inc);
-    Color operator - (const Color& c);
-    Color operator * (const double& mult);
-    Color operator * (const Color& rhs);
+    Color operator + (const Color& c) const;
+    Color operator + (const double& inc) const;
+    Color operator - (const Color& c) const ;
+    Color operator - (const double& dec) const;
+    Color operator * (const double& mult) const;
+    Color operator * (const Color& rhs) const;
+    bool operator == (const Color& rhs) const;
 
 };
 

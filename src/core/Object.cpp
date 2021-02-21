@@ -25,15 +25,5 @@ Point Object::getPosition()
     return position_;
 }
 
-const core::Material& Object::getMaterialAt([[maybe_unused]] const Point& p)
-{
-    return material_;    
-}
-
-const core::Vector Object::UV([[maybe_unused]] const Point& p)
-{
-    return core::Vector{0.0, 0.0, 0.0};
-}
-
 }  // namespace core
 }  // namespace return

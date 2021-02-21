@@ -3,35 +3,31 @@
 
 #include <ostream>
 
-namespace rt
-{
-namespace core
+namespace rt::core
 {
 
 class Point
 {
 public:
-    Point(double x, double y, double z):
-    x_(x), y_(y), z_(z)
+    Point(double x, double y, double z): x_(x), y_(y), z_(z)
     { }
 
-    Point():
-    x_(0.0), y_(0.0), z_(0.0)
+    Point(): x_(0.0), y_(0.0), z_(0.0)
     { }
 
-    double getX() const;
-    double getY() const;
-    double getZ() const;
+    double x() const;
+    double y() const;
+    double z() const;
 
-    void setX(double x);
-    void setY(double y);
-    void setZ(double z);
+    void x(double x);
+    void y(double y);
+    void z(double z);
 
     Point operator + (const Point& p) const;
     Point operator - (const Point& p) const;
-    double operator * (const Point& p) const;
-
+    double dot(const Point& p) const;
     Point operator*(const double& scale) const;
+    bool operator== (const Point& p) const;
     
     std::string toString() const;
 
@@ -43,7 +39,6 @@ protected:
 
 std::ostream& operator<< (std::ostream& s, Point p);
 
-}  // namespace core
-}  // namespace rt 
+}  // namespace rt::core
 
 #endif  // RT_CORE_POINT_HPP_

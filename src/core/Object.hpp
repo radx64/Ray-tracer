@@ -15,23 +15,23 @@ namespace core
 class Object
 {
 public:
-    typedef std::shared_ptr<Object> Ptr;
+    using Ptr = std::shared_ptr<Object>;
 
     Object() : position_(0.0,0.0,0.0)
     { }
 
     void setMaterial(Material material);
     const Material& getMaterial();
-    const core::Material& getMaterialAt(const Point& p);
-    virtual const core::Vector UV(const Point& p);
+
     void setPosition(Point& p);
     Point getPosition();
 
     virtual Vector getNormalAt(Point& p) = 0;
     virtual bool hit(Ray r, double& dist) = 0;
-
+    virtual core::Vector UV(const Point& p) = 0;
+    virtual const core::Material& getMaterialAt(const Point& p) = 0;
+    
     bool isCastingShadow = true;
-
 
 private:
     Point position_;

@@ -10,15 +10,15 @@ namespace core
 
 Vector Vector::crossProduct(const Vector& v)
 {
-    double x = y_ * v.getZ() - v.getY() * z_; 
-    double y = z_ * v.getX() - v.getZ() * x_; 
-    double z = x_ * v.getY() - v.getX() * y_;
+    double x = y_ * v.z() - v.y() * z_; 
+    double y = z_ * v.x() - v.z() * x_; 
+    double z = x_ * v.y() - v.x() * y_;
     return Vector(x, y, z);
 }
 
 double Vector::dotProduct(const Vector& v)
 {
-    return (getX()*v.getX()) + (getY()*v.getY()) + (getZ()*v.getZ());
+    return (x()*v.x()) + (y()*v.y()) + (z()*v.z());
 }
 
 void Vector::normalize()
@@ -36,7 +36,7 @@ bool Vector::isZero() const
 
 Vector Vector::operator+(const Point& p) const
 {
-    return Vector(x_ +p.getX(), y_ + p.getY(), z_ + p.getZ());
+    return Vector(x_ +p.x(), y_ + p.y(), z_ + p.z());
 }
 
 Vector Vector::operator*(const double& scale) const
