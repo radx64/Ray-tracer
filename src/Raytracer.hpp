@@ -6,37 +6,34 @@
 
 #include <libs/Logger.hpp>
 
-#include "scene/Scene.hpp"
 #include "core/Color.hpp"
+#include "scene/Scene.hpp"
 
-namespace rt
-{
+namespace rt {
 
 struct ThreadInfo;
 
-class Raytracer
-{
+class Raytracer {
 public:
-    using Image = std::vector<std::vector<core::Color>>;
-    Raytracer();
+  using Image = std::vector<std::vector<core::Color>>;
+  Raytracer();
 
-    void load(scene::Scene& s);
-    void run();
-    Image getImage();
-    std::tuple<const unsigned int, const unsigned int> getImageSize();
+  void load(scene::Scene &s);
+  void run();
+  Image getImage();
+  std::tuple<const unsigned int, const unsigned int> getImageSize();
 
 private:
-    void render(const int min_y, const int max_y, rt::ThreadInfo* thread_info);
-    core::Color trace(core::Ray& ray, int reccursionStep);
-    void progress_check(std::vector<rt::ThreadInfo>* thread_info);
+  void render(const int min_y, const int max_y, rt::ThreadInfo *thread_info);
+  core::Color trace(core::Ray &ray, int reccursionStep);
+  void progress_check(std::vector<rt::ThreadInfo> *thread_info);
 
-    Image buffer_;
-    scene::Scene scene_;
+  Image buffer_;
+  scene::Scene scene_;
 
-    Logger logger_;
+  Logger logger_;
 };
 
-}  // namespace rt
+} // namespace rt
 
-
-#endif  // RT_RAYTRACER
+#endif // RT_RAYTRACER

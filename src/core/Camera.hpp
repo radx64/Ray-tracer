@@ -4,16 +4,14 @@
 #include "Point.hpp"
 #include "Vector.hpp"
 
-namespace rt::core
-{
+namespace rt::core {
 
-struct Camera
-{
-    Point position_;
-    Vector rotation_;
-    Vector fov_; // should use something like Vec2 for that but I'm lazy
+struct Camera {
+  Point position_;
+  Vector rotation_;
+  Vector fov_; // should use something like Vec2 for that but I'm lazy
 };
 
-}  // namespace rt::core
+} // namespace rt::core
 
-#endif  // CORE_CAMERA_HPP
+#endif // CORE_CAMERA_HPP
