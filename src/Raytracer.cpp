@@ -214,7 +214,7 @@ core::Color Raytracer::trace(core::Ray& ray, int reccursionStep)
             core::Vector V = ray.getDirection();    // observation vector
             V.normalize();
             core::Vector L = light->getPosition() - collision; // light incidence vector
-            double t2 = sqrtf(L.dotProduct(L));
+            double t2 = sqrtf(L.dot(L));
             core::Vector lightDirection = L * (2.0f/t2);
             L.normalize(); // do not normalize L before light direction calculatuions
             lightDirection.normalize();
@@ -236,12 +236,12 @@ core::Color Raytracer::trace(core::Ray& ray, int reccursionStep)
                 };
             }         
 
-            double dotNL = normal.dotProduct(L) ;
+            double dotNL = normal.dot(L) ;
 
             core::Vector R = L - (normal * dotNL * 2.0);   //reflected vector
             R.normalize();
 
-            double dotVR = V.dotProduct(R) ; // angle betwen observation vector and reflected vector
+            double dotVR = V.dot(R) ; // angle betwen observation vector and reflected vector
 
             if (dotVR < 0) dotVR = 0;
 
@@ -276,7 +276,7 @@ core::Color Raytracer::trace(core::Ray& ray, int reccursionStep)
             }
         }
 
-        core::Ray reflected(collision, ray.getDirection() - normal * (ray.getDirection().dotProduct(normal)) * 2.0);
+        core::Ray reflected(collision, ray.getDirection() - normal * (ray.getDirection().dot(normal)) * 2.0);
         core::Color reflectedColor = trace(reflected, reccursionStep + 1);
         local = local + clamp(reflectedColor * 0.3);    // todo: reflection factor as paramter
 
@@ -284,7 +284,7 @@ core::Color Raytracer::trace(core::Ray& ray, int reccursionStep)
         {
             double n1;
             double n2;
-            double cosI = ray.getDirection().dotProduct(normal);
+            double cosI = ray.getDirection().dot(normal);
 
             if (cosI > 0)
             {

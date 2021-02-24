@@ -2,7 +2,7 @@ set(projectName "Raytracer")
 cmake_minimum_required (VERSION 2.6)
 project (${projectName})
 
-enable_testing()
+option(test "Build all tests." ON) # Makes boolean 'test' available.
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
     "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
@@ -30,9 +30,10 @@ add_subdirectory(libs)
 add_executable(${projectName} main.cpp)
 
 target_link_libraries(${projectName} png raytracerCore externalLibs pthread)
-
-enable_testing ()
-add_subdirectory(test)
+if (test)
+    enable_testing ()
+    add_subdirectory(test)
+endif()
 
 set(CONFIGURED_ONCE TRUE CACHE INTERNAL
     "A flag showing that CMake has configured at least once.")

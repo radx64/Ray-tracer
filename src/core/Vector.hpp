@@ -3,36 +3,25 @@
 
 #include "Point.hpp"
 
-namespace rt
-{
-namespace core
+namespace rt::core
 {
 
 class Vector : public Point
 {
 public:
-    Vector(double x, double y, double z) : Point(x, y, z)
-    { };
-    Vector() : Point(0.0, 0.0, 0.0)
-    { };
-    Vector(const Point& p) : Point(p)
-    { };
-    Vector(const Vector& v) : Point(v.x_,v.y_,v.z_)
-    { };
+    Vector(double x, double y, double z);
+    Vector();
+    Vector(const Point& p);
+    Vector(const Vector& v);
 
     Vector& operator=(const Vector& v) = default;
 
-    Vector crossProduct(const Vector& v);
-    double dotProduct(const Vector& v);
+    Vector cross(const Vector& v);
     double length() const;
     bool isZero() const;
     void normalize();
-
-    Vector operator+(const Point& p) const;
-    Vector operator*(const double& scale) const;
 };
 
-}  // namespace core
-}  // namespace rt
+}  // namespace rt::core
 
 #endif  // RT_CORE_VECTOR_HPP_

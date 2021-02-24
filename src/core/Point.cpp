@@ -43,7 +43,7 @@ Point Point::operator - (const Point& p) const
     return Point(x()-p.x(), y()-p.y(),z()-p.z());
 }
 
-double Point::dot(const Point& p) const  /* dot product - must change to method to be similar to vector*/
+double Point::dot(const Point& p) const
 {
     return x()*p.x() + y()*p.y() + z()*p.z();
 }

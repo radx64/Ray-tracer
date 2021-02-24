@@ -27,8 +27,8 @@ core::Vector Sphere::getNormalAt(core::Point& p)
 bool Sphere::hit(core::Ray r, double& t)
 {
     core::Vector dist = r.getOrigin() - getPosition();
-    double b = dist.dotProduct(r.getDirection());
-    double c = (dist.dotProduct(dist)) - (getRadius() * getRadius());
+    double b = dist.dot(r.getDirection());
+    double c = (dist.dot(dist)) - (getRadius() * getRadius());
     double d = b*b - c;
     if (d <= 0.0) return false;
 

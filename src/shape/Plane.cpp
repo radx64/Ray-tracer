@@ -17,7 +17,7 @@ core::Vector Plane::getNormalAt([[maybe_unused]] core::Point& p)
 bool Plane::hit(core::Ray r, double& t)
 {
     core::Vector rayDirection = r.getDirection();
-    double d = rayDirection.dotProduct(getPosition());
+    double d = rayDirection.dot(getPosition());
 
     if (d >= 0) return false;
 
