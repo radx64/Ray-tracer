@@ -20,8 +20,8 @@ public:
 
   void load(scene::Scene &s);
   void run();
-  Image getImage();
-  std::tuple<const unsigned int, const unsigned int> getImageSize();
+  Image getImage() const;
+  std::tuple<const unsigned int, const unsigned int> getImageSize() const;
 
 private:
   void render(const int min_y, const int max_y, rt::ThreadInfo *thread_info);

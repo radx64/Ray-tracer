@@ -48,8 +48,8 @@ core::Vector Sphere::UV(const core::Point &p) {
   point.normalize();
 
   double u = atan2(point.x(), point.z());
-  double v = atan2(point.y(), core::Vector{point.x(), 0.0, point.z()}.length());
-  u = (u / (2.0 * M_PI)) + 0.5;
+  double v = 0.0;
+  u = fabs((u / (2.0 * M_PI)) - 0.5);
   v = 0.5 - asin(point.y()) / M_PI;
   return core::Vector{u, v, 0.0};
 }

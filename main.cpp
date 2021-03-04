@@ -25,10 +25,29 @@ int main(int argc, char **argv) {
   return 0;
 }
 
-void textInterface() {
-  try {
+void saveImage(const rt::Raytracer& rt, const std::string& filename)
+{
+rt::Raytracer::Image image;
+    image = rt.getImage();
+
+    const auto image_size = rt.getImageSize();
+    png::image<png::rgb_pixel> pngImage(std::get<1>(image_size),
+                                        std::get<0>(image_size));
+    for (size_t y = 0; y < pngImage.get_height(); ++y) {
+      for (size_t x = 0; x < pngImage.get_width(); ++x) {
+        pngImage[pngImage.get_height() - y - 1][x] = png::rgb_pixel(
+            image[x][y].red, image[x][y].green, image[x][y].blue);
+      }
+    }
+
+    pngImage.write(filename);
+}
+
+
+void raytrace(const std::string& scene_filename, const std::string& result_filename)
+{
     rt::scene::Loader loader;
-    rt::scene::Scene s = loader.load("../scene.json");
+    rt::scene::Scene s = loader.load(scene_filename);
     logger.inf() << "Scene loaded";
     rt::Raytracer raytracer;
     logger.inf() << "Raytracer created";
@@ -40,20 +59,13 @@ void textInterface() {
     std::chrono::duration<double> diff = end - start;
     logger.inf() << "Took " << std::setw(4) << diff.count() << " [s] to render";
     logger.inf() << "Raytracer finished";
-    rt::Raytracer::Image image;
-    image = raytracer.getImage();
+    saveImage(raytracer, result_filename);
+}
 
-    const auto image_size = raytracer.getImageSize();
-    png::image<png::rgb_pixel> pngImage(std::get<1>(image_size),
-                                        std::get<0>(image_size));
-    for (size_t y = 0; y < pngImage.get_height(); ++y) {
-      for (size_t x = 0; x < pngImage.get_width(); ++x) {
-        pngImage[pngImage.get_height() - y - 1][x] = png::rgb_pixel(
-            image[x][y].red, image[x][y].green, image[x][y].blue);
-      }
-    }
-
-    pngImage.write("../render.png");
+void textInterface() {
+  try {
+    raytrace("../planets.json", "../planets.png");
+    raytrace("../scene.json", "../render.png");
 
   } catch (const std::string &e) {
     logger.err() << "Exception was thrown: "

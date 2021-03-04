@@ -102,14 +102,26 @@ core::Vector Loader::loadFov(Json::Value &objectNode) {
   return core::Vector{x, y, 0.0};
 }
 
+std::shared_ptr<core::Texture> Loader::loadTexture(Json::Value &objectNode)
+{
+  Json::Value textureNode = objectNode["texture"];
+  if(!textureNode) return nullptr;
+  std::string texture_filename = textureNode.get("file", "").asString();
+  double u = textureNode.get("u_offset", 0.0).asDouble();
+  double v = textureNode.get("v_offset", 0.0).asDouble();
+  return std::make_shared<core::Texture>(texture_filename, u, v);
+}
+
 core::Material Loader::loadMaterial(Json::Value &objectNode) {
   Json::Value material = getOrDie(objectNode, "material");
   core::Color ambient = loadColor(material, "ambient");
   core::Color specular = loadColor(material, "specular");
   core::Color diffuse = loadColor(material, "diffuse");
+  std::shared_ptr<core::Texture> texture = loadTexture(material);
+
   double refractionIndex = material.get("refractionIndex", 0.0).asDouble();
   double opacity = material.get("opacity", 0.0).asDouble();
-  return core::Material{ambient, specular, diffuse, refractionIndex, opacity};
+  return core::Material{ambient, specular, diffuse, texture, refractionIndex, opacity};
 }
 
 core::Color Loader::loadColor(Json::Value &objectNode, std::string colorName) {

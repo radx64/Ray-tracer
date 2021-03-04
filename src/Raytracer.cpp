@@ -26,7 +26,8 @@ struct ThreadInfo {
   unsigned int finished;
 };
 
-std::tuple<const unsigned int, const unsigned int> Raytracer::getImageSize() {
+std::tuple<const unsigned int, const unsigned int> Raytracer::getImageSize() const
+{
   return std::tuple(IMG_HEIGHT, IMG_WIDTH);
 }
 
@@ -62,7 +63,7 @@ core::Color depthMap(const double distance, const double maxDepth) {
   return core::Color(255 - d, 255 - d, 255 - d);
 }
 
-Raytracer::Image Raytracer::getImage() { return buffer_; }
+Raytracer::Image Raytracer::getImage() const{ return buffer_; }
 
 void Raytracer::load(scene::Scene &s) { scene_ = s; }
 
@@ -255,7 +256,17 @@ core::Color Raytracer::trace(core::Ray &ray, int reccursionStep) {
                                light->getColor() * pow(dotVR, 40) * 0.95 *
                                casting_shadow_opacity_factor;
 
-        if (checkered) {
+        if (closestObjectMaterial.texture)
+        {
+          double u = closestObjectUV.x();
+          double v = closestObjectUV.y();
+
+          ambient = closestObjectMaterial.texture->get_color_at_uv(u, v);
+          ambient = ambient * lightning_factor * casting_shadow_opacity_factor;
+          diffuse = closestObjectMaterial.texture->get_color_at_uv(u, v);
+          diffuse = diffuse * light->getColor() * dotNL * lightning_factor * 30.0 * casting_shadow_opacity_factor;
+        }
+        else if (checkered) {
           diffuse = diffuse * 2.0;
         }
 
