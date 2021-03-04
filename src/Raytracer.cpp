@@ -15,8 +15,8 @@ constexpr double MAX_DEPTH = 100000.0;
 constexpr int maxReccursionLimit = 3;
 
 constexpr bool MULTITHREAD_MODE = true;
-constexpr int IMG_WIDTH = 640;
-constexpr int IMG_HEIGHT = 480;
+constexpr int IMG_WIDTH = 800;
+constexpr int IMG_HEIGHT = 600;
 
 namespace rt {
 
