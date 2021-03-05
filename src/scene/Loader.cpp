@@ -1,11 +1,13 @@
 #include <exception>
 #include <fstream>
 #include <iostream>
+#include <memory>
 
 #include "Loader.hpp"
 
 #include "core/Camera.hpp"
 #include "core/Material.hpp"
+#include "core/Texture.hpp"
 #include "shape/Light.hpp"
 #include "shape/Plane.hpp"
 #include "shape/Sphere.hpp"
@@ -102,26 +104,38 @@ core::Vector Loader::loadFov(Json::Value &objectNode) {
   return core::Vector{x, y, 0.0};
 }
 
-std::shared_ptr<core::Texture> Loader::loadTexture(Json::Value &objectNode)
-{
-  Json::Value textureNode = objectNode["texture"];
-  if(!textureNode) return nullptr;
-  std::string texture_filename = textureNode.get("file", "").asString();
-  double u = textureNode.get("u_offset", 0.0).asDouble();
-  double v = textureNode.get("v_offset", 0.0).asDouble();
-  return std::make_shared<core::Texture>(texture_filename, u, v);
-}
-
-core::Material Loader::loadMaterial(Json::Value &objectNode) {
+std::unique_ptr<core::Material> Loader::loadMaterial(Json::Value &objectNode) {
   Json::Value material = getOrDie(objectNode, "material");
   core::Color ambient = loadColor(material, "ambient");
   core::Color specular = loadColor(material, "specular");
   core::Color diffuse = loadColor(material, "diffuse");
-  std::shared_ptr<core::Texture> texture = loadTexture(material);
 
+  // texture loading is quite hacky (need to reorganize json file a bit first)
   double refractionIndex = material.get("refractionIndex", 0.0).asDouble();
   double opacity = material.get("opacity", 0.0).asDouble();
-  return core::Material{ambient, specular, diffuse, texture, refractionIndex, opacity};
+
+  std::unique_ptr<core::Material> loaded_material = std::make_unique<core::Material>(
+    std::move(ambient),
+    std::move(specular),
+    std::move(diffuse),
+    refractionIndex,
+    opacity);
+
+  Json::Value textureNode = material["texture"];
+  if(!textureNode)
+  {
+    return loaded_material;
+  }
+  else
+  {
+    // if texture node found sprinkle some texture on top of loaded material (forgot original one)
+    // this is a bad looking approach i guess.
+    std::string texture_filename = textureNode.get("file", "").asString();
+    logger_.dbg() << "Loading texutre: " << texture_filename;
+    double u = textureNode.get("u_offset", 0.0).asDouble();
+    double v = textureNode.get("v_offset", 0.0).asDouble();
+    return std::make_unique<core::Texture>(*loaded_material, texture_filename, u, v);
+  }
 }
 
 core::Color Loader::loadColor(Json::Value &objectNode, std::string colorName) {
@@ -138,11 +152,11 @@ void Loader::loadSphere(Scene &scene, Json::Value &objectNode) {
   shape::Sphere::Ptr object = std::make_shared<shape::Sphere>();
   core::Point pos = loadPosition(sphereNode);
   double radius = getOrDie(sphereNode, "radius").asDouble();
-  core::Material material = loadMaterial(sphereNode);
+  std::unique_ptr<core::Material> material = loadMaterial(sphereNode);
 
   object->setPosition(pos);
   object->setRadius(radius);
-  object->setMaterial(material);
+  object->setMaterial(std::move(material));
   scene.addObject(object);
 }
 
@@ -151,10 +165,10 @@ void Loader::loadPlane(Scene &scene, Json::Value &objectNode) {
   Json::Value planeNode = objectNode.get("config", "null");
   shape::Plane::Ptr object = std::make_shared<shape::Plane>();
   core::Point pos = loadPosition(planeNode);
-  core::Material material = loadMaterial(planeNode);
+  std::unique_ptr<core::Material> material = loadMaterial(planeNode);
 
   object->setPosition(pos);
-  object->setMaterial(material);
+  object->setMaterial(std::move(material));
   scene.addObject(object);
 }
 

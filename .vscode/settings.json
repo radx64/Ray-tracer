@@ -74,5 +74,6 @@
         "ranges": "cpp",
         "stop_token": "cpp",
         "thread": "cpp"
-    }
+    },
+    "C_Cpp.dimInactiveRegions": false
 }

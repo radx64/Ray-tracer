@@ -173,21 +173,14 @@ core::Color Raytracer::trace(core::Ray &ray, int reccursionStep) {
     local = depthMap(distance, 500.0);
   } else {
     if (closestObject == nullptr)
-      return core::Color{30.0, 30.0, 30.0};
+      return core::Color{30.0, 30.0, 30.0}; //this should be some background defined color (or transparency channel)
 
     core::Point collision = ray.getOrigin() + ray.getDirection() * distance;
     core::Vector normal = closestObject->getNormalAt(collision);
 
-    core::Material closestObjectMaterial =
+    const core::Material& closestObjectMaterial =
         closestObject->getMaterialAt(collision);
     core::Vector closestObjectUV = closestObject->UV(collision);
-
-    // checkered pattern fo UV map testing
-    bool checkered = false;
-    float sines = cos(M_PI * 40 * closestObjectUV.x()) *
-                  cos(M_PI * 40.0 * closestObjectUV.y());
-    if (sines < 0)
-      checkered = true;
     auto lights = scene_.getLights();
     for (auto &light : lights) {
 
@@ -241,35 +234,21 @@ core::Color Raytracer::trace(core::Ray &ray, int reccursionStep) {
       double casting_shadow_opacity_factor = 1.0;
       if (isInShadow) {
         casting_shadow_opacity_factor =
-            castingShadowObject->getMaterial().opacity;
+            castingShadowObject->getMaterial().get_opacity_at_uv(closestObjectUV.x(), closestObjectUV.y());
       }
 
       if (SHADOWS_DEBUG && isInShadow)
         local = core::Color{255.0, 0.0, 255.0};
       else {
-        core::Color ambient = closestObjectMaterial.ambient * lightning_factor *
-                              casting_shadow_opacity_factor;
-        core::Color diffuse = closestObjectMaterial.diffuse *
+        
+        core::Color ambient = closestObjectMaterial.get_ambient_at_uv(closestObjectUV.x(), closestObjectUV.y()) * 
+                              lightning_factor * casting_shadow_opacity_factor;
+        core::Color diffuse = closestObjectMaterial.get_diffuse_at_uv(closestObjectUV.x(), closestObjectUV.y()) *
                               light->getColor() * dotNL * lightning_factor *
-                              10.0 * casting_shadow_opacity_factor;
-        core::Color specular = closestObjectMaterial.specular *
+                              20.0 * casting_shadow_opacity_factor;
+        core::Color specular = closestObjectMaterial.get_specular_at_uv(closestObjectUV.x(), closestObjectUV.y()) *
                                light->getColor() * pow(dotVR, 40) * 0.95 *
                                casting_shadow_opacity_factor;
-
-        if (closestObjectMaterial.texture)
-        {
-          double u = closestObjectUV.x();
-          double v = closestObjectUV.y();
-
-          ambient = closestObjectMaterial.texture->get_color_at_uv(u, v);
-          ambient = ambient * lightning_factor * casting_shadow_opacity_factor;
-          diffuse = closestObjectMaterial.texture->get_color_at_uv(u, v);
-          diffuse = diffuse * light->getColor() * dotNL * lightning_factor * 30.0 * casting_shadow_opacity_factor;
-        }
-        else if (checkered) {
-          diffuse = diffuse * 2.0;
-        }
-
         local = local + clamp(ambient) + clamp(diffuse) + clamp(specular);
       }
     }
@@ -281,7 +260,7 @@ core::Color Raytracer::trace(core::Ray &ray, int reccursionStep) {
     local = local +
             clamp(reflectedColor * 0.3); // todo: reflection factor as paramter
 
-    if (closestObjectMaterial.opacity > 0.0 &&
+    if (closestObjectMaterial.get_opacity_at_uv(closestObjectUV.x(), closestObjectUV.y()) > 0.0 &&
         REFRACTIONS_ENABLED) // comparing doubles should use some kind of
                              // epsilon (std::numeric_limis<double> maybe?)
     {
@@ -289,16 +268,20 @@ core::Color Raytracer::trace(core::Ray &ray, int reccursionStep) {
       double n2;
       double cosI = ray.getDirection().dot(normal);
 
+      double local_refraction_index = closestObjectMaterial.get_refraction_index_at_uv(closestObjectUV.x(), closestObjectUV.y());
+
       if (cosI > 0) {
-        n1 = closestObjectMaterial.refractionIndex;
+        n1 = local_refraction_index;
         n2 = 1.0f;
       } else {
         n1 = 1.0f;
-        n2 = closestObjectMaterial.refractionIndex;
+        n2 = local_refraction_index;
         cosI = -cosI;
       }
 
       double cosT = 1.0f - pow(n1 / n2, 2.0f) * (1.0f - pow(cosI, 2.0f));
+
+      double local_opacity_index = closestObjectMaterial.get_opacity_at_uv(closestObjectUV.x(), closestObjectUV.y());
 
       if (cosT < 0.0f) {
         // This is total internal reflection (but i'm lazy so it still
@@ -307,14 +290,14 @@ core::Color Raytracer::trace(core::Ray &ray, int reccursionStep) {
                                             normal * ((n1 / n2) * cosI - cosT));
 
         core::Color refractionColor = trace(refraction, reccursionStep + 1);
-        local = local + clamp(refractionColor * closestObjectMaterial.opacity);
+        local = local + clamp(refractionColor * local_opacity_index);
 
       } else {
         core::Ray refraction(collision, ray.getDirection() * (n1 / n2) +
                                             normal * ((n1 / n2) * cosI - cosT));
 
         core::Color refractionColor = trace(refraction, reccursionStep + 1);
-        local = local + clamp(refractionColor * closestObjectMaterial.opacity);
+        local = local + clamp(refractionColor * local_opacity_index);
       }
     }
   }

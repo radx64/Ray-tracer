@@ -1,7 +1,6 @@
 #include "Color.hpp"
 
-namespace rt {
-namespace core {
+namespace rt::core {
 Color::Color(const double r, const double g, const double b)
     : red(r), green(g), blue(b) {}
 
@@ -38,5 +37,4 @@ std::string Color::toString() {
                      ", " + std::to_string(blue) + "]");
 }
 
-} // namespace core
-} // namespace rt
+} // namespace rt::core

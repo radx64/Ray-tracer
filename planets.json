@@ -17,9 +17,9 @@
                     "position" : {"x" : -200.0, "y" : -30.0, "z" : 150.0},
                     "material" :
                     {
-                        "ambient"  : {"r" : 127, "g" : 127, "b" : 127},
+                        "ambient"  : {"r" : 10, "g" : 10, "b" : 10},
                         "specular" : {"r" : 0, "g" : 0, "b" : 0},
-                        "diffuse"  : {"r" : 127, "g" : 127, "b" : 127},
+                        "diffuse"  : {"r" : 10, "g" : 10, "b" : 10},
                         "texture"  : {"file" : "../textures/earth_tex.png", "u_offset" : 0.6, "v_offset" : 0.0}
                     },
                     "radius" : 120
@@ -32,9 +32,9 @@
                     "position" : {"x" : -330.0, "y" : 30.0, "z" : 30.0},
                     "material" :
                     {
-                        "ambient"  : {"r" : 127, "g" : 127, "b" : 127},
+                        "ambient"  : {"r" : 10, "g" : 10, "b" : 10},
                         "specular" : {"r" : 0, "g" : 0, "b" : 0},
-                        "diffuse"  : {"r" : 127, "g" : 127, "b" : 127},
+                        "diffuse"  : {"r" : 10, "g" : 10, "b" : 10},
                         "texture"  : {"file" : "../textures/moon_tex.png", "u_offset" : 0.6, "v_offset" : 0.0}
                     },
                     "radius" : 15
@@ -47,9 +47,9 @@
                     "position" : {"x" : 200.0, "y" : -30.0, "z" : 150.0},
                     "material" :
                     {
-                        "ambient" :  {"r" : 127,  "g" : 127,  "b" : 127},
+                        "ambient" :  {"r" : 10,  "g" : 10,  "b" : 10},
                         "specular" : {"r" : 0,  "g" : 0, "b" : 0},
-                        "diffuse" :  {"r" : 127, "g" : 127,  "b" : 127},
+                        "diffuse" :  {"r" : 10, "g" : 10,  "b" : 10},
                         "texture"  : {"file" : "../textures/mars_tex.png", "u_offset" : 0.0, "v_offset" : 0.0}
                     },
                     "radius" : 60
@@ -60,14 +60,15 @@
                 "type" : "sphere",
                 "config" : 
                 {
-                    "position" : {"x" : 0.0, "y" : -23250.0, "z" : 10000.0},
+                    "position" : {"x" : 0.0, "y" : -2650.0, "z" : 950.0},
                     "material" :
                     {
                         "ambient" : {"r" : 150,  "g" : 150,  "b" : 200},
                         "specular" :{"r" : 0, "g" : 0,  "b" : 0},
-                        "diffuse" : {"r" : 150,  "g" : 150, "b" : 200}
+                        "diffuse" : {"r" : 150,  "g" : 150, "b" : 200},
+                        "texture"  : {"file" : "../textures/materials/tiles/Tiles074_1K_Color.png", "u_offset" : 0.0, "v_offset" : 0.0}
                     },
-                    "radius" : 25000
+                    "radius" : 2500
                 }
             },
 
@@ -89,4 +90,4 @@
             }                        
         ]
     }
-}l
+}

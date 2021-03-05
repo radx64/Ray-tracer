@@ -16,7 +16,7 @@ public:
 
   Object() : position_(0.0, 0.0, 0.0) {}
 
-  void setMaterial(Material material);
+  void setMaterial(std::unique_ptr<Material> material);
   const Material &getMaterial();
 
   void setPosition(Point &p);
@@ -31,7 +31,7 @@ public:
 
 private:
   Point position_;
-  Material material_;
+  std::unique_ptr<Material> material_;
 };
 
 } // namespace core

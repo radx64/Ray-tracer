@@ -27,9 +27,8 @@ private:
   core::Point loadPosition(Json::Value &objectNode);
   core::Vector loadRotation(Json::Value &objectNode);
   core::Vector loadFov(Json::Value &objectNode);
-  core::Material loadMaterial(Json::Value &objectNode);
+  std::unique_ptr<core::Material> loadMaterial(Json::Value &objectNode);
   core::Color loadColor(Json::Value &objectNode, std::string colorName);
-  std::shared_ptr<core::Texture> loadTexture(Json::Value &objectNode);
   void loadSphere(Scene &scene, Json::Value &sphereNode);
   void loadPlane(Scene &scene, Json::Value &planeNode);
   void loadLight(Scene &scene, Json::Value &lightNode);
