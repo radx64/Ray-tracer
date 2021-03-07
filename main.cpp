@@ -57,7 +57,7 @@ void raytrace(const std::string& scene_filename, const std::string& result_filen
     raytracer.run();
     auto end = std::chrono::system_clock::now();
     std::chrono::duration<double> diff = end - start;
-    logger.inf() << "Took " << std::setw(4) << diff.count() << " [s] to render";
+    logger.inf() << "Took " << std::setw(4) << diff.count() << " [s] to render " << scene_filename;
     logger.inf() << "Raytracer finished";
     saveImage(raytracer, result_filename);
 }
@@ -68,8 +68,7 @@ void textInterface() {
     raytrace("../scene.json", "../render.png");
 
   } catch (const std::string &e) {
-    logger.err() << "Exception was thrown: "
-                 << "\n"
+    logger.err() << "Exception was thrown: \n"
                  << "\t" << e;
   }
 }

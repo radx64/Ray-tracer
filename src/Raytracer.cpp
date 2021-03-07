@@ -6,19 +6,32 @@
 #include <functional>
 #include <iostream>
 #include <thread>
+#include <random>
 
 constexpr bool REFRACTIONS_ENABLED = true;
 constexpr bool DEPTHMAP_ENABLED = false;
 constexpr bool SHADOWS_ENABLED = true;
 constexpr bool SHADOWS_DEBUG = false;
 constexpr double MAX_DEPTH = 100000.0;
-constexpr int maxReccursionLimit = 3;
+constexpr unsigned int MAX_RECCURSION_LIMIT = 3;
+
+constexpr bool SPHERICAL_LIGHTS_MODEL = true;
+constexpr unsigned int LIGHT_PROBES_COUNT = 16;
+constexpr unsigned int LIGHT_RADIUS = 50;
 
 constexpr bool MULTITHREAD_MODE = true;
 constexpr int IMG_WIDTH = 800;
 constexpr int IMG_HEIGHT = 600;
 
 namespace rt {
+
+int get_random_value(unsigned int max)
+{
+  static std::random_device r;
+  static std::mt19937 engine(r());
+  static std::uniform_int_distribution<int> uniform_dist(-max, max);
+  return uniform_dist(engine);  
+}
 
 struct ThreadInfo {
   unsigned int index;
@@ -155,7 +168,7 @@ void Raytracer::render(const int min_y, const int max_y,
 core::Color Raytracer::trace(core::Ray &ray, int reccursionStep) {
   core::Color local = {0.0, 0.0, 0.0};
 
-  if (reccursionStep > maxReccursionLimit)
+  if (reccursionStep > MAX_RECCURSION_LIMIT)
     return local;
 
   double distance = MAX_DEPTH;
@@ -182,74 +195,89 @@ core::Color Raytracer::trace(core::Ray &ray, int reccursionStep) {
         closestObject->getMaterialAt(collision);
     core::Vector closestObjectUV = closestObject->UV(collision);
     auto lights = scene_.getLights();
-    for (auto &light : lights) {
+    unsigned int light_probes_count = LIGHT_PROBES_COUNT;
+    if (!SPHERICAL_LIGHTS_MODEL) light_probes_count = 1;
 
-      // PHONG lighting model
-      double a = 0.7;
-      double b = 0.01;
-      double c = 0.001;
+    for (auto &scene_light : lights) {
 
-      core::Vector V = ray.getDirection(); // observation vector
-      V.normalize();
-      core::Vector L =
-          light->getPosition() - collision; // light incidence vector
-      double t2 = sqrtf(L.dot(L));
-      core::Vector lightDirection = L * (2.0f / t2);
-      L.normalize(); // do not normalize L before light direction calculatuions
-      lightDirection.normalize();
-      core::Ray lightRay(collision, lightDirection);
 
-      bool isInShadow = false;
-      core::Object::Ptr castingShadowObject{nullptr};
+      for (unsigned int light_probe_index = 0; light_probe_index < light_probes_count; ++ light_probe_index)
+      {
+        const double random_x = get_random_value(LIGHT_RADIUS);
+        const double random_y = get_random_value(LIGHT_RADIUS);
+        const double random_z = get_random_value(LIGHT_RADIUS);
 
-      if (SHADOWS_ENABLED) {
-        for (auto &object : objects) {
-          if (object->isCastingShadow && object->hit(lightRay, t2)) {
-            isInShadow = true;
-            castingShadowObject = object;
-            break;
-          }
-        };
-      }
+        rt::core::Point light_position = scene_light->getPosition();
+        rt::core::Point light_delta_point(random_x, random_y,random_z);
+        light_position = light_position + light_delta_point;
 
-      double dotNL = normal.dot(L);
+        // PHONG shading model
+        double a = 0.7;
+        double b = 0.01;
+        double c = 0.001;
 
-      core::Vector R = L - (normal * dotNL * 2.0); // reflected vector
-      R.normalize();
+        core::Vector V = ray.getDirection(); // observation vector
+        V.normalize();
+        core::Vector L =
+            light_position - collision; // light incidence vector
+        double t2 = sqrtf(L.dot(L));
+        core::Vector lightDirection = L * (2.0f / t2);
+        L.normalize(); // do not normalize L before light direction calculatuions
+        lightDirection.normalize();
+        core::Ray lightRay(collision, lightDirection);
 
-      double dotVR =
-          V.dot(R); // angle betwen observation vector and reflected vector
+        bool isInShadow = false;
+        core::Object::Ptr castingShadowObject{nullptr};
 
-      if (dotVR < 0)
-        dotVR = 0;
+        if (SHADOWS_ENABLED) {
+          for (auto &object : objects) {
+            if (object->isCastingShadow && object->hit(lightRay, t2)) {
+              isInShadow = true;
+              castingShadowObject = object;
+              break;
+            }
+          };
+        }
 
-      core::Vector difference = light->getPosition() - collision;
+        double dotNL = normal.dot(L);
 
-      double di = sqrtf(difference.x() * difference.x() +
-                        difference.y() * difference.y() +
-                        difference.z() * difference.z());
+        core::Vector R = L - (normal * dotNL * 2.0); // reflected vector
+        R.normalize();
 
-      double lightning_factor = 1.0 / (a + b * di + c * di * di);
+        double dotVR =
+            V.dot(R); // angle betwen observation vector and reflected vector
 
-      double casting_shadow_opacity_factor = 1.0;
-      if (isInShadow) {
-        casting_shadow_opacity_factor =
-            castingShadowObject->getMaterial().get_opacity_at_uv(closestObjectUV.x(), closestObjectUV.y());
-      }
+        if (dotVR < 0)
+          dotVR = 0;
 
-      if (SHADOWS_DEBUG && isInShadow)
-        local = core::Color{255.0, 0.0, 255.0};
-      else {
-        
-        core::Color ambient = closestObjectMaterial.get_ambient_at_uv(closestObjectUV.x(), closestObjectUV.y()) * 
-                              lightning_factor * casting_shadow_opacity_factor;
-        core::Color diffuse = closestObjectMaterial.get_diffuse_at_uv(closestObjectUV.x(), closestObjectUV.y()) *
-                              light->getColor() * dotNL * lightning_factor *
-                              20.0 * casting_shadow_opacity_factor;
-        core::Color specular = closestObjectMaterial.get_specular_at_uv(closestObjectUV.x(), closestObjectUV.y()) *
-                               light->getColor() * pow(dotVR, 40) * 0.95 *
-                               casting_shadow_opacity_factor;
-        local = local + clamp(ambient) + clamp(diffuse) + clamp(specular);
+        core::Vector difference = light_position - collision;
+
+        double di = sqrtf(difference.x() * difference.x() +
+                          difference.y() * difference.y() +
+                          difference.z() * difference.z());
+
+        double lightning_factor = 1.0 / (a + b * di + c * di * di);
+
+        double casting_shadow_opacity_factor = 1.0;
+        if (isInShadow) {
+          casting_shadow_opacity_factor =
+              castingShadowObject->getMaterial().get_opacity_at_uv(closestObjectUV.x(), closestObjectUV.y());
+        }
+
+        if (SHADOWS_DEBUG && isInShadow)
+          local = core::Color{255.0, 0.0, 255.0};
+        else {
+          
+          core::Color ambient = closestObjectMaterial.get_ambient_at_uv(closestObjectUV.x(), closestObjectUV.y()) * 
+                                lightning_factor * casting_shadow_opacity_factor;
+          core::Color diffuse = closestObjectMaterial.get_diffuse_at_uv(closestObjectUV.x(), closestObjectUV.y()) *
+                                scene_light->getColor() * dotNL * lightning_factor *
+                                20.0 * casting_shadow_opacity_factor;
+          core::Color specular = closestObjectMaterial.get_specular_at_uv(closestObjectUV.x(), closestObjectUV.y()) *
+                                scene_light->getColor() * pow(dotVR, 40) * 0.95 *
+                                casting_shadow_opacity_factor;
+          local = local + (clamp(ambient) + clamp(diffuse) + clamp(specular)) * (1.0 / (double)light_probes_count);
+        }
       }
     }
 
@@ -262,7 +290,7 @@ core::Color Raytracer::trace(core::Ray &ray, int reccursionStep) {
 
     if (closestObjectMaterial.get_opacity_at_uv(closestObjectUV.x(), closestObjectUV.y()) > 0.0 &&
         REFRACTIONS_ENABLED) // comparing doubles should use some kind of
-                             // epsilon (std::numeric_limis<double> maybe?)
+                            // epsilon (std::numeric_limis<double> maybe?)
     {
       double n1;
       double n2;
@@ -283,22 +311,19 @@ core::Color Raytracer::trace(core::Ray &ray, int reccursionStep) {
 
       double local_opacity_index = closestObjectMaterial.get_opacity_at_uv(closestObjectUV.x(), closestObjectUV.y());
 
+      core::Ray refraction(core::Point(0.0,0.0,0.0), core::Vector(0.0,0.0,0.0));
+
       if (cosT < 0.0f) {
         // This is total internal reflection (but i'm lazy so it still
         // refracting) todo: fix me
-        core::Ray refraction(collision, ray.getDirection() * (n1 / n2) +
+        refraction = core::Ray(collision, ray.getDirection() * (n1 / n2) +
                                             normal * ((n1 / n2) * cosI - cosT));
-
-        core::Color refractionColor = trace(refraction, reccursionStep + 1);
-        local = local + clamp(refractionColor * local_opacity_index);
-
       } else {
-        core::Ray refraction(collision, ray.getDirection() * (n1 / n2) +
+        refraction = core::Ray(collision, ray.getDirection() * (n1 / n2) +
                                             normal * ((n1 / n2) * cosI - cosT));
-
-        core::Color refractionColor = trace(refraction, reccursionStep + 1);
-        local = local + clamp(refractionColor * local_opacity_index);
       }
+        core::Color refractionColor = trace(refraction, reccursionStep + 1);
+        local = local + clamp(refractionColor * local_opacity_index); 
     }
   }
   return local;
